@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include tlp_app *.css
+recursive-include tlp_app *.csv
+recursive-include tlp_app *.html
+recursive-include tlp_app *.ico
+recursive-include tlp_app *.js
+recursive-include tlp_app *.json
+recursive-include tlp_app *.md
+recursive-include tlp_app *.png
+recursive-include tlp_app *.py
+recursive-include tlp_app *.svg
+recursive-include tlp_app *.txt
+recursive-exclude tlp_app *.pyc
