@@ -1,23 +1,31 @@
 // Copyright (c) 2021, Indictrans and contributors
 // For license information, please see license.txt
-
+var total_fasteners = 0.0;
 frappe.ui.form.on('Costsheet', {
 
-	refresh: function(frm){
-        var total_weight = 0.0;
-	    $.each(frm.doc.cost_working_items, function(index, row){
-	    	alert("sdddddddddddddd")
-           total_weight += (row.finished_weight * row.qty)
-           console.log("//////////////////total_weight", total_weight)
-        });
-        $.each(frm.doc.costsheet_items, function(index, row){
-           row.total_weight = total_weight
-        });
+	// refresh: function(frm){
+ //        var total_weight = 0.0;
+	    // $.each(frm.doc.cost_working_items, function(index, row){
+	    // 	alert("sdddddddddddddd")
+     //       total_weight += (row.finished_weight * row.qty)
+     //       console.log("//////////////////total_weight", total_weight)
+     //    });
+     //    $.each(frm.doc.costsheet_items, function(index, row){
+     //       row.total_weight = total_weight
+     //    });
 
-	},
+	// },
 	
 	assembly: function(frm){
 		var total_weight = 0.0;
+		// $.each(frm.doc.cost_working_items, function(index, row){
+	 //    	alert("sdddddddddddddd")
+  //          total_weight += (row.finished_weight * row.qty)
+  //          console.log("//////////////////total_weight", total_weight)
+  //       });
+  //       $.each(frm.doc.costsheet_items, function(index, row){
+  //          row.total_weight = total_weight
+  //       });
 		//add item on costsheet table
 		frappe.call({
 				method: "frappe.client.get_value",
@@ -30,13 +38,13 @@ frappe.ui.form.on('Costsheet', {
 					if(r){
 					var childTable = cur_frm.add_child("costsheet_items");
                       childTable.item_name=r.message.item_name
-                      // total_weight += (r.message.finished_weight * r.message.qty)
-                      // console.log("////////////// total_weight", total_weight)
-                      // childTable.total_weight = total_weight
 					}
+
 					frm.refresh_fields("costsheet_items");
 				}
 			});
+
+		
         //add items on material cost items
         var semifinshed = 0;
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
@@ -76,14 +84,30 @@ frappe.ui.form.on('Costsheet', {
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
 	        var total_fasteners = 0.0;
+	        var total_weight = 0.0;
 	        $.each(tabletransfer.items, function(index, row){
 	            var d = frm.add_child("cost_working_items");
 	            d.ri_no = row.item_code;
 	            d.description = row.description;
 	            d.quantity = row.qty;
                 d.is_semifinished = row.is_semifinished
-                d.finished_weight = row.finished_weight
-                // console.log("/////////////// frm.doc.cost_working_items.length",frm.doc.cost_working_items.length)
+                if(d.is_semifinished == 0){
+                	if(d.set_rate){
+                			console.log("/////////////// d.set_rate", d.set_rate)
+	                	console.log("/////////////// tabletransfer.items",tabletransfer.items.length)
+	                	total_fasteners += d.set_rate
+	                	console.log("<<<<<<<<<<<<<<<<<,,,,,,,,, total_fasteners", total_fasteners)
+	                	if(d.idx == tabletransfer.items.length ){
+	                		d.basic_rate = total_fasteners;
+
+	                	}
+                	}
+                
+
+                }
+              
+                // d.finished_weight = row.finished_weight
+                // console.log("/////////////// total_weight",row.finished_weight *row.qty )
 
 	            frappe.call({
 					method: "frappe.client.get",
@@ -93,6 +117,7 @@ frappe.ui.form.on('Costsheet', {
 					},
 					callback:function(r) {
 						if(r){
+							// console.log("////////////////r", r.message)
 							d.material_type = r.message.item_group;
 							frm.refresh_fields("cost_working_items");
 
@@ -108,9 +133,18 @@ frappe.ui.form.on('Costsheet', {
 							else{
 								frappe.throw({message:__("Please add labour cost for item <b>{0}</b> on Cost Working Items table",[r.message.item_code]), title: __("Mandatory")});
 							}
-							 
-						}
+                           // console.log("/////////////// total_weight",r.message.finished_weight , r.message.qty )
+
+							// if (r.message.finished_weight && r.message.qty){
+
+							//     total_weight += (r.message.finished_weight * r.message.qty)
+						 //    }
+						 //    else{
+						 //    	frappe.throw({message:__("Please add quantity and finished weight in Item master for item", +(r.message.item_name)), title: __("Mandatory")});
+						 //    }
+						 //    	alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> total_weight", total_weight)
 						frm.refresh_fields("cost_working_items");
+							}
 					}
 				});
 	            frm.refresh_field("cost_working_items");
@@ -186,6 +220,7 @@ cur_frm.fields_dict['assembly'].get_query = function(doc) {
 };
 
 frappe.ui.form.on('Cost Working Items', {
+
 	labour_cost: function(frm, cdt, cdn){
 		var d = locals[cdt][cdn];
 		frappe.model.set_value(cdt, cdn, "piece_rate", d.material_cost + d.labour_cost);
@@ -222,8 +257,30 @@ frappe.ui.form.on('Cost Working Items', {
             }
         else{
           if(d.set_rate){
-        		total_fasteners +=  d.set_rate;
-        		frappe.model.set_value(cdt, cdn, "basic_rate", total_fasteners);
+          	      frappe.model.with_doc("BOM", frm.doc.assembly, function() {
+	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
+	       
+	        // var total_weight = 0.0;
+	       
+	           
+                			console.log("/////////////// d.set_rate", d.set_rate)
+	                	console.log("/////////////// tabletransfer.items",tabletransfer.items.length)
+	                		console.log("333333333333333333333333333 d.idx",d.idx)
+	                	total_fasteners += d.set_rate
+	                	 console.log("<<<<<<<<<<<<<<<<<,,,,,,,,, total_fasteners", total_fasteners)
+	                	if(d.idx == tabletransfer.items.length ){
+	                		
+	                		d.basic_rate = total_fasteners;
+                       
+	                	}
+                	
+                
+
+                
+			
+	});
+        		// total_fasteners +=  d.set_rate;
+        		// frappe.model.set_value(cdt, cdn, "basic_rate", total_fasteners);
         	}
         }
 
