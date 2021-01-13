@@ -1,0 +1,112 @@
+{
+ "autoname": "field:item_name",
+ "creation": "2021-01-05 18:07:46.579775",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_name",
+  "description",
+  "total_weight",
+  "column_break_6",
+  "basic_rate",
+  "cost_rate",
+  "percent_1",
+  "amount_of_percent_1",
+  "percent_2",
+  "amount_of_percent_2",
+  "percent_3",
+  "amount_of_percent_3",
+  "complete",
+  "without"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "total_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Weight"
+  },
+  {
+   "fieldname": "basic_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Basic Rate"
+  },
+  {
+   "fieldname": "cost_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cost Rate"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "percent_1",
+   "fieldtype": "Percent",
+   "label": "Percent 1"
+  },
+  {
+   "fieldname": "amount_of_percent_1",
+   "fieldtype": "Currency",
+   "label": "Amount of Percent 1"
+  },
+  {
+   "fieldname": "percent_2",
+   "fieldtype": "Percent",
+   "label": "Percent 2"
+  },
+  {
+   "fieldname": "amount_of_percent_2",
+   "fieldtype": "Currency",
+   "label": "Amount of Percent 2"
+  },
+  {
+   "fieldname": "percent_3",
+   "fieldtype": "Percent",
+   "label": "Percent 3"
+  },
+  {
+   "fieldname": "amount_of_percent_3",
+   "fieldtype": "Currency",
+   "label": "Amount of Percent 3"
+  },
+  {
+   "fieldname": "complete",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Complete"
+  },
+  {
+   "fieldname": "without",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Without"
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-01-13 09:54:51.744209",
+ "modified_by": "Administrator",
+ "module": "Tlp App",
+ "name": "Costsheet Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

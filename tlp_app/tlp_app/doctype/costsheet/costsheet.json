@@ -1,0 +1,98 @@
+{
+ "creation": "2021-01-05 14:05:31.686412",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_name",
+  "assembly",
+  "amended_from",
+  "section_break_4",
+  "costsheet_items",
+  "section_break_6",
+  "material_cost_items",
+  "section_break_8",
+  "cost_working_items"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "options": "Item",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "assembly",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assembly",
+   "options": "BOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Costsheet",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "costsheet_items",
+   "fieldtype": "Table",
+   "label": "Costsheet Items",
+   "options": "Costsheet Item"
+  },
+  {
+   "fieldname": "material_cost_items",
+   "fieldtype": "Table",
+   "label": "Material Cost Items",
+   "options": "Material Cost Item"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cost_working_items",
+   "fieldtype": "Table",
+   "label": "Cost Working Items",
+   "options": "Cost Working Items"
+  }
+ ],
+ "is_submittable": 1,
+ "modified": "2021-01-13 12:13:24.622705",
+ "modified_by": "Administrator",
+ "module": "Tlp App",
+ "name": "Costsheet",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

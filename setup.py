@@ -12,7 +12,7 @@ setup(
 	version=version,
 	description='Transmission Line Products',
 	author='Indictrans',
-	author_email='anuradha.k@indictranstech.com',
+	author_email='anu@gmail.com',
 	packages=find_packages(),
 	zip_safe=False,
 	include_package_data=True,

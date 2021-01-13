@@ -1,0 +1,55 @@
+{
+ "autoname": "field:notes_template_name",
+ "creation": "2021-01-05 00:39:29.805500",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "notes_template_name",
+  "disabled",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "notes_template_name",
+   "fieldtype": "Data",
+   "label": "Notes Template Name",
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text Editor",
+   "label": "Notes"
+  }
+ ],
+ "modified": "2021-01-05 00:40:02.024447",
+ "modified_by": "Administrator",
+ "module": "Tlp App",
+ "name": "Notes Template",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "notes_template_name",
+ "track_changes": 1
+}

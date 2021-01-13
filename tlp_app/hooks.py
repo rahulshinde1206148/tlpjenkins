@@ -8,7 +8,7 @@ app_publisher = "Indictrans"
 app_description = "Transmission Line Products"
 app_icon = "octicon octicon-file-directory"
 app_color = "grey"
-app_email = "anuradha.k@indictranstech.com"
+app_email = "anu@gmail.com"
 app_license = "MIT"
 
 # Includes in <head>
@@ -26,7 +26,9 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+    "Quotation": 'tlp_app/custom_scripts/quotation/quotation.js'
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -126,4 +128,5 @@ app_license = "MIT"
 # override_doctype_dashboards = {
 # 	"Task": "tlp_app.task.get_dashboard_data"
 # }
+fixtures = ['Custom Field', 'Property Setter', 'Print Format', 'Role', 'Terms and Conditions']
 
