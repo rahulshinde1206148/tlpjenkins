@@ -20,38 +20,48 @@
    "in_list_view": 1,
    "label": "RI No.",
    "options": "Item",
+   "read_only": 1,
    "unique": 1
   },
   {
+   "columns": 2,
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "in_list_view": 1,
-   "label": "Description"
+   "label": "Description",
+   "read_only": 1
   },
   {
    "fieldname": "material_type",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Material Type",
-   "options": "Item Group"
+   "options": "Item Group",
+   "read_only": 1
   },
   {
+   "columns": 1,
    "fieldname": "finished_weightkg",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Finished Weight(KG)"
+   "label": "Finished Weight(KG)",
+   "read_only": 1
   },
   {
+   "columns": 1,
    "fieldname": "rough_weightkg",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Rough Weight(KG)"
+   "label": "Rough Weight(KG)",
+   "read_only": 1
   },
   {
+   "columns": 2,
    "fieldname": "material_cost",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Material Cost"
+   "label": "Material Rs",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_3",
@@ -59,7 +69,7 @@
   }
  ],
  "istable": 1,
- "modified": "2021-01-11 14:50:41.315615",
+ "modified": "2021-01-15 16:16:06.477013",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Material Cost Item",

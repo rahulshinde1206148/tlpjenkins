@@ -8,61 +8,135 @@
   "description",
   "material_type",
   "quantity",
-  "rought_weightkg",
+  "rough_weightkg",
   "drilling",
   "bending",
-  "data_8"
+  "casting",
+  "column_break_9",
+  "maching",
+  "welding",
+  "forging",
+  "file",
+  "die",
+  "galvanization",
+  "miscellaneous",
+  "labour_cost"
  ],
  "fields": [
   {
+   "columns": 1,
    "fieldname": "ri_no",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "RI No.",
-   "options": "Item"
+   "options": "Item",
+   "read_only": 1
   },
   {
+   "columns": 1,
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "in_list_view": 1,
-   "label": "Description"
+   "label": "Description",
+   "read_only": 1
   },
   {
+   "columns": 1,
    "fieldname": "material_type",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Material Type",
-   "options": "Item Group"
+   "options": "Item Group",
+   "read_only": 1
   },
   {
+   "columns": 1,
    "fieldname": "quantity",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Quantity"
+   "label": "Quantity",
+   "read_only": 1
   },
   {
-   "fieldname": "rought_weightkg",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Rought Weight(Kg)"
-  },
-  {
+   "columns": 1,
    "fieldname": "drilling",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Drilling"
   },
   {
+   "columns": 1,
    "fieldname": "bending",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Bending"
   },
   {
-   "fieldname": "data_8",
-   "fieldtype": "Data"
+   "columns": 1,
+   "fieldname": "casting",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Casting"
+  },
+  {
+   "columns": 1,
+   "fieldname": "maching",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Machining"
+  },
+  {
+   "columns": 1,
+   "fieldname": "welding",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Welding"
+  },
+  {
+   "fieldname": "forging",
+   "fieldtype": "Currency",
+   "label": "Forging"
+  },
+  {
+   "fieldname": "file",
+   "fieldtype": "Currency",
+   "label": "File"
+  },
+  {
+   "fieldname": "die",
+   "fieldtype": "Currency",
+   "label": "Die"
+  },
+  {
+   "fieldname": "galvanization",
+   "fieldtype": "Currency",
+   "label": "Galvanization"
+  },
+  {
+   "fieldname": "miscellaneous",
+   "fieldtype": "Currency",
+   "label": "Miscellaneous"
+  },
+  {
+   "fieldname": "labour_cost",
+   "fieldtype": "Currency",
+   "label": "Labour Cost"
+  },
+  {
+   "columns": 1,
+   "fieldname": "rough_weightkg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Rough Weight(KG)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
   }
  ],
  "istable": 1,
- "modified": "2021-01-13 16:35:28.177499",
+ "modified": "2021-01-15 16:18:15.315372",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Operation or Labour Items",

@@ -6,5 +6,5 @@ from __future__ import unicode_literals
 # import frappe
 import unittest
 
-class TestCostsheet(unittest.TestCase):
+class TestMadeOutOf(unittest.TestCase):
 	pass

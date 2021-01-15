@@ -1,5 +1,6 @@
 {
- "creation": "2021-01-05 14:05:31.686412",
+ "autoname": "CS.-.FY.-.#####",
+ "creation": "2021-01-15 15:10:54.687390",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -11,6 +12,8 @@
   "costsheet_items",
   "section_break_6",
   "material_cost_items",
+  "section_break_7",
+  "operation_or_labour_items",
   "section_break_8",
   "cost_working_items"
  ],
@@ -37,20 +40,20 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Costsheet",
+   "options": "Cost Sheet",
    "print_hide": 1,
    "read_only": 1
   },
   {
    "fieldname": "costsheet_items",
    "fieldtype": "Table",
-   "label": "Costsheet Items",
+   "label": "Cost Sheet",
    "options": "Costsheet Item"
   },
   {
    "fieldname": "material_cost_items",
    "fieldtype": "Table",
-   "label": "Material Cost Items",
+   "label": "Material Cost",
    "options": "Material Cost Item"
   },
   {
@@ -68,15 +71,34 @@
   {
    "fieldname": "cost_working_items",
    "fieldtype": "Table",
-   "label": "Cost Working Items",
+   "label": "Cost Working",
    "options": "Cost Working Items"
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "operation_or_labour_items",
+   "fieldtype": "Table",
+   "label": "Operation /Labour Cost",
+   "options": "Operation or Labour Items"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Cost Sheet",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-01-13 12:13:24.622705",
+ "modified": "2021-01-15 15:32:25.080817",
  "modified_by": "Administrator",
  "module": "Tlp App",
- "name": "Costsheet",
+ "name": "Cost Sheet",
  "owner": "Administrator",
  "permissions": [
   {

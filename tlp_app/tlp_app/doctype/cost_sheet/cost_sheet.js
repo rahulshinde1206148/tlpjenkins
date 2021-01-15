@@ -1,7 +1,8 @@
 // Copyright (c) 2021, Indictrans and contributors
 // For license information, please see license.txt
 var total_fasteners = 0.0;
-frappe.ui.form.on('Costsheet', {
+var total_weight = 0.0;
+frappe.ui.form.on('Cost Sheet', {
 
 	// refresh: function(frm){
  //        var total_weight = 0.0;
@@ -10,39 +11,80 @@ frappe.ui.form.on('Costsheet', {
      //       total_weight += (row.finished_weight * row.qty)
      //       console.log("//////////////////total_weight", total_weight)
      //    });
-     //    $.each(frm.doc.costsheet_items, function(index, row){
+     //    $.each(frm.doc.cost_sheet_items, function(index, row){
      //       row.total_weight = total_weight
      //    });
 
 	// },
 	
+	
 	assembly: function(frm){
-		var total_weight = 0.0;
+		
 		// $.each(frm.doc.cost_working_items, function(index, row){
 	 //    	alert("sdddddddddddddd")
   //          total_weight += (row.finished_weight * row.qty)
   //          console.log("//////////////////total_weight", total_weight)
   //       });
-  //       $.each(frm.doc.costsheet_items, function(index, row){
-  //          row.total_weight = total_weight
-  //       });
-		//add item on costsheet table
+       
+  //     
+		//add item on cost_sheet table
 		frappe.call({
-				method: "frappe.client.get_value",
+				method: "frappe.client.get",
 				args:{
-					doctype: "BOM",
-					filters: {'name': frm.doc.assembly},
-					fieldname: "item_name"
+					doctype: "Item",
+					filters: {'name': frm.doc.item_name}
 				},
 				callback:function(r) {
 					if(r){
 					var childTable = cur_frm.add_child("costsheet_items");
-                      childTable.item_name=r.message.item_name
+                      childTable.item_name=r.message.item_code
+                      childTable.description=r.message.description
+                      childTable.basic_rate = get_basic_rate(frm)
+
 					}
 
 					frm.refresh_fields("costsheet_items");
 				}
 			});
+
+
+		    //   frappe.model.with_doc("BOM", frm.doc.assembly, function() {
+	     //    var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
+	     //    $.each(tabletransfer.items, function(index, row){
+		    //         total_weight += row.qty row.finished_weight;
+		       
+      //       });
+      //       if(total_weight){
+      //       	frappe.model.set_value( "total_weight", r.message.finished_weight*r.message.qty);
+
+      //       }
+      //       frm.refresh_fields("cost_sheet_items");
+
+	     // });
+     //        $.each(frm.doc.cost_sheet_items, function(index, row){
+     //        	alert("/////////////////////")
+     //                console.log("##################### row.item_name",row.item_name)
+	    //             frappe.call({
+					// 	method: "frappe.client.get",
+					// 	args:{
+					// 		doctype: "Item",
+					// 		filters: {'item_name': row.item_name}
+					// },
+					// callback:function(r) {
+					// 	if(r){
+					// 		console.log(">>>>>>>>>>>>>>>>>>>>> r.message.finished_weight * r.message.qty",r.message.finished_weight, r.message.qty)
+					// 		total_weight += (r.message.finished_weight * r.message.qty)
+					// 		console.log("///////////// total_weight", total_weight)
+					// 	}
+						
+					// }
+
+					// });
+					// row.total_weight = total_weight
+	    //         });
+
+
+	       
 
 		
         //add items on material cost items
@@ -80,6 +122,35 @@ frappe.ui.form.on('Costsheet', {
             		frappe.throw({message:__("None of the items are semifinished from selected asssembly")});
             }
          });
+        //add items on operation or labour items
+        frappe.model.with_doc("BOM", frm.doc.assembly, function() {
+	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
+	        $.each(tabletransfer.items, function(index, row){
+	        	if (row.is_semifinished == 1){
+		            var d = frm.add_child("operation_or_labour_items");
+		            d.ri_no = row.item_code;
+		            d.description = row.description;
+		            d.quantity = row.qty;
+		            frappe.call({
+						method: "frappe.client.get",
+						args:{
+							doctype: "Item",
+							filters: {'item_code': row.item_code}
+					},
+					callback:function(r) {
+						if(r){
+							d.material_type = r.message.item_group;
+							d.rough_weightkg = r.message.weight_per_unit;
+						}
+						frm.refresh_fields("operation_or_labour_items");
+					}
+					  });
+	                
+	            }
+            });
+	     });
+
+
         //add items on cost working items
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
@@ -91,20 +162,7 @@ frappe.ui.form.on('Costsheet', {
 	            d.description = row.description;
 	            d.quantity = row.qty;
                 d.is_semifinished = row.is_semifinished
-                if(d.is_semifinished == 0){
-                	if(d.set_rate){
-                			console.log("/////////////// d.set_rate", d.set_rate)
-	                	console.log("/////////////// tabletransfer.items",tabletransfer.items.length)
-	                	total_fasteners += d.set_rate
-	                	console.log("<<<<<<<<<<<<<<<<<,,,,,,,,, total_fasteners", total_fasteners)
-	                	if(d.idx == tabletransfer.items.length ){
-	                		d.basic_rate = total_fasteners;
-
-	                	}
-                	}
                 
-
-                }
               
                 // d.finished_weight = row.finished_weight
                 // console.log("/////////////// total_weight",row.finished_weight *row.qty )
@@ -133,39 +191,21 @@ frappe.ui.form.on('Costsheet', {
 							else{
 								frappe.throw({message:__("Please add labour cost for item <b>{0}</b> on Cost Working Items table",[r.message.item_code]), title: __("Mandatory")});
 							}
-                           // console.log("/////////////// total_weight",r.message.finished_weight , r.message.qty )
-
-							// if (r.message.finished_weight && r.message.qty){
-
-							//     total_weight += (r.message.finished_weight * r.message.qty)
-						 //    }
-						 //    else{
-						 //    	frappe.throw({message:__("Please add quantity and finished weight in Item master for item", +(r.message.item_name)), title: __("Mandatory")});
-						 //    }
-						 //    	alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> total_weight", total_weight)
+                          
 						frm.refresh_fields("cost_working_items");
 							}
 					}
 				});
 	            frm.refresh_field("cost_working_items");
 	        });
-             
-           // if (d.is_semifinished == 1){
-           // 	   alert("haha")
-           //  	if(d.set_rate){
-           //  		d.basic_rate = d.set_rate;
-           //  	}
-           //  }
-           //  else{
-           //    if(d.set_rate){
-           //  		total_fasteners +=  d.set_rate;
-           //  	}
-           //  }
-
-
+         
         });
        
 	},
+
+	
+
+	
 
 	// refresh: function(frm) {
         
@@ -197,9 +237,37 @@ frappe.ui.form.on('Costsheet', {
 	// 		refresh_field('items')
     // }
 
+    // hideTheButtonWrapper = $('*[data-fieldname="costsheet_items"]');
+    // hideTheButtonWrapper .find('.grid-add-row').hide();
 
+	refresh:function(frm){
+ 		$(".grid-add-row").hide();
+	}
 	
 });
+ function get_basic_rate(frm){
+   	console.log("///////////////get_basic_rate")
+   	// var cost_working_details = frm.doc.cost_working_items;
+			   var total_basic = 0
+			 
+			 //   for(var i in cost_working_details) {
+			 //   	console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<< cost_working_details[i].basic_rate", cost_working_details[i].basic_rate)
+				// total_basic = total_basic + cost_working_details[i].basic_rate
+				// }
+        if(frm.doc.cost_working_items){
+        	$.each(frm.doc.cost_working_items, function(index,row){
+				console.log("<<<<<<<<<<< row.basic_rate", row.basic_rate)
+	            total_basic = total_basic + row.basic_rate
+	        });
+        }
+        else{
+        	// alert("//////hahahhahahahahah")
+        }
+		
+				console.log("<<<<<<<<<<<<<<<<<<total_basic", total_basic)
+				return total_basic
+   }
+ 
 
 cur_frm.fields_dict['item_name'].get_query = function(doc) {
 	return{
@@ -257,58 +325,51 @@ frappe.ui.form.on('Cost Working Items', {
             }
         else{
           if(d.set_rate){
-          	      frappe.model.with_doc("BOM", frm.doc.assembly, function() {
-	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
-	       
-	        // var total_weight = 0.0;
-	       
-	           
-                			console.log("/////////////// d.set_rate", d.set_rate)
-	                	console.log("/////////////// tabletransfer.items",tabletransfer.items.length)
-	                		console.log("333333333333333333333333333 d.idx",d.idx)
-	                	total_fasteners += d.set_rate
-	                	 console.log("<<<<<<<<<<<<<<<<<,,,,,,,,, total_fasteners", total_fasteners)
-	                	if(d.idx == tabletransfer.items.length ){
-	                		
-	                		d.basic_rate = total_fasteners;
-                       
-	                	}
-                	
-                
-
-                
-			
-	});
-        		// total_fasteners +=  d.set_rate;
-        		// frappe.model.set_value(cdt, cdn, "basic_rate", total_fasteners);
+          	frappe.model.with_doc("BOM", frm.doc.assembly, function() {
+			        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
+			        total_fasteners += d.set_rate
+		        	if(d.idx == tabletransfer.items.length ){
+			            frappe.model.set_value(cdt, cdn, "basic_rate",  total_fasteners);          
+			        }
+				});
         	}
         }
-
-            // console.log("///////////////////d.index", d)
-		 //   frappe.call({
-			// 	method: "frappe.client.get",
-			// 	args: {
-			// 		doctype: "BOM Item",
-			// 		parent: 'BOM',
-			// 		filters: { name : d.item_code},
-			// 	},
-			// 	callback: function(r) {
-			// 		console.log("sddddddddddd", r.message)
-			// 		if(r.message.is_semifinished == 1) {
-			// 			console.log("is_semifinished", d.set_rate)
-			// 			frappe.model.set_value(cdt, cdn, "basic_rate", d.set_rate);
-			// 		}
-			// 		else{
-			// 			frappe.model.set_value(cdt, cdn, "basic_rate", 0.0);
-			// 		}
-			// 	}
-			// });
-
-
-
-
-
 		
 	 },
 });
+
+
+frappe.ui.form.on('Cost Sheet Items', {
+	item_name: function(frm, cdt, cdn){
+		alert("hahahhahahahahah")
+		var d = locals[cdt][cdn];
+        	var cost_working_details = frm.doc.cost_working_items;
+			   var total_basic = 0.0;
+			 
+			   for(var i in cost_working_details) {
+				total_basic = total_basic + cost_working_details[i].basic_rate
+				console.log("<<<<<<<<<<<<<<<< total_basic", total_basic)
+				}
+						frappe.model.set_value(d.cdt, d.cdn, "basic_rate", total_basic);
+
+				// frm.set_value("basic_rate",total_basic)
+		// frappe.call({
+		// 		method: "frappe.client.get",
+		// 		args:{
+		// 			ddoctype: "BOM Item",
+		// 			parent: 'BOM',
+		// 			filters: { item_name : d.item_name},
+		// 		},
+		// 		callback:function(r) {
+		// 			if(r){
+		// 				frappe.model.set_value(cdt, cdn, "total_weight", r.message.finished_weight*r.message.qty);
+		// 			}
+
+		// 			frm.refresh_fields("cost_sheet_items");
+		// 		}
+		// 	});
+	}
+
+});
+
 
