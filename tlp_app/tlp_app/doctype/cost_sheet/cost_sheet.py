@@ -9,7 +9,7 @@ from frappe.model.document import Document
 class CostSheet(Document):
     def validate(self):
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>.validate")
-        # get_basic_rate(self)
+        get_basic_rate(self)
 
 def get_basic_rate(doc):
     if(doc.cost_working_items):
@@ -20,7 +20,6 @@ def get_basic_rate(doc):
     if(doc.cost_sheet_items):
         for i in doc.cost_sheet_items:
             i.basic_rate = total_basic
-
 
 def set_blank_values_on_cost_working(doc):
      if(doc.cost_working_items):

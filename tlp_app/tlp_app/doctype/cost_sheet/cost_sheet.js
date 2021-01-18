@@ -94,6 +94,7 @@ frappe.ui.form.on('Cost Sheet', {
             
             $.each(tabletransfer.items, function(index, row){
             	if (row.is_semifinished == 1){
+            		// frm.clear_table("material_cost_items")
                     var d = frm.add_child("material_cost_items");
 	                d.ri_no = row.item_code;
 	                d.description = row.description;
@@ -105,7 +106,7 @@ frappe.ui.form.on('Cost Sheet', {
 					},
 					callback:function(r) {
 						if(r){
-							d.material_type = r.message.item_group;
+							d.material_type = r.message.made_out_of;
 							d.finished_weightkg = r.message.finished_weight;
 							d.rough_weightkg = r.message.weight_per_unit;
 							d.material_cost = r.message.valuation_rate * r.message.weight_per_unit;
@@ -127,6 +128,7 @@ frappe.ui.form.on('Cost Sheet', {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
 	        $.each(tabletransfer.items, function(index, row){
 	        	if (row.is_semifinished == 1){
+	        		// frm.clear_table("operation_or_labour_items")
 		            var d = frm.add_child("operation_or_labour_items");
 		            d.ri_no = row.item_code;
 		            d.description = row.description;
@@ -139,7 +141,7 @@ frappe.ui.form.on('Cost Sheet', {
 					},
 					callback:function(r) {
 						if(r){
-							d.material_type = r.message.item_group;
+							d.material_type = r.message.made_out_of;
 							d.rough_weightkg = r.message.weight_per_unit;
 						}
 						frm.refresh_fields("operation_or_labour_items");
@@ -157,6 +159,7 @@ frappe.ui.form.on('Cost Sheet', {
 	        var total_fasteners = 0.0;
 	        var total_weight = 0.0;
 	        $.each(tabletransfer.items, function(index, row){
+	        	// frm.clear_table("cost_working_items")
 	            var d = frm.add_child("cost_working_items");
 	            d.ri_no = row.item_code;
 	            d.description = row.description;
@@ -176,7 +179,7 @@ frappe.ui.form.on('Cost Sheet', {
 					callback:function(r) {
 						if(r){
 							// console.log("////////////////r", r.message)
-							d.material_type = r.message.item_group;
+							d.material_type = r.message.made_out_of;
 							frm.refresh_fields("cost_working_items");
 
 							if(r.message.valuation_rate && r.message.weight_per_unit){

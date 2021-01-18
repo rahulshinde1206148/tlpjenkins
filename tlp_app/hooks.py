@@ -28,7 +28,7 @@ app_license = "MIT"
 # include js in doctype views
 doctype_js = {
     "Quotation": 'tlp_app/custom_scripts/quotation/quotation.js',
-    "BOM": 'tlp_app/custom_scripts/bom/bom.js'
+    "Item": 'tlp_app/custom_scripts/item/item.js'
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
