@@ -82,13 +82,18 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
+doc_events = {
 # 	"*": {
 # 		"on_update": "method",
 # 		"on_cancel": "method",
 # 		"on_trash": "method"
 #	}
-# }
+    "BOM":{
+		"on_submit" : "tlp_app.tlp_app.custom_scripts.bom.bom.on_submit",
+		"on_update_after_submit" : "tlp_app.tlp_app.custom_scripts.bom.bom.on_update_after_submit"
+	}
+
+}
 
 # Scheduled Tasks
 # ---------------

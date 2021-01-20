@@ -1,6 +1,5 @@
 frappe.ui.form.on('Item', {
 	item_group: function(frm){
-		alert("<<<<<<<<<<<<<<<<<<")
 		cur_frm.fields_dict['made_out_of'].get_query = function(doc) {
 			return{
 				filters: [

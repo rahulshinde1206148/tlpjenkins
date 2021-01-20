@@ -1,0 +1,44 @@
+{
+ "autoname": "field:parameter",
+ "creation": "2021-01-18 18:16:16.161188",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter",
+  "rskg",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "unique": 1
+  },
+  {
+   "fieldname": "rskg",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rs/Kg"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks"
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-01-18 18:17:00.651945",
+ "modified_by": "Administrator",
+ "module": "Tlp App",
+ "name": "Copper Casting",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
