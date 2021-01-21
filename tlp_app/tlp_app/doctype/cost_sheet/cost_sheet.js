@@ -1,6 +1,7 @@
 // Copyright (c) 2021, Indictrans and contributors
 // For license information, please see license.txt
 var total_fasteners = 0.0;
+var finished_weight = 0.0;
 frappe.ui.form.on('Cost Sheet', {
 	assembly: function(frm){
 		frm.set_df_property('assembly', 'read_only', 1);
@@ -72,6 +73,8 @@ frappe.ui.form.on('Cost Sheet', {
 							if(r){
 								d.material_type = r.message.made_out_of;
 								d.rough_weightkg = r.message.weight_per_unit;
+								d.casting = r.message.weight_per_unit * r.message.ab_casting_rate;
+								d.galvanization = r.message.finished_weight * r.message.galvanization_charges;
 							}
 							frm.refresh_fields("operation_or_labour_items");
 						}

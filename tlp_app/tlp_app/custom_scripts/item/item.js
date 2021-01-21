@@ -24,6 +24,39 @@ frappe.ui.form.on('Item', {
 				}
 			});
 		
+	},
+	setup: function(frm){
+		frappe.call({
+			method: "frappe.client.get_value",
+			args:{
+				doctype: "Ferrous",
+				filters: {parameter: 'Galvanising Charge'},
+				parent: "TLP Setting Page",
+				fieldname: "rskg"
+		    },
+			callback:function(r) {
+				if(r){
+					frappe.model.set_value(frm.doc.doctype, frm.doc.name, "galvanization_charges" ,r.message.rskg)
+				}
+				frm.refresh_fields("item");
+			}
+		});
+		frappe.call({
+			method: "frappe.client.get_value",
+			args:{
+				doctype: "Aluminium Bronze",
+				filters: {parameter: 'AB Casting rate for GENERAL items (CR1)'},
+				parent: "TLP Setting Page",
+				fieldname: "rskg"
+		    },
+			callback:function(r) {
+				if(r){
+					frappe.model.set_value(frm.doc.doctype, frm.doc.name, "ab_casting_rate" ,r.message.rskg)
+				}
+				frm.refresh_fields("item");
+			}
+		});
+
 	}
 
 });

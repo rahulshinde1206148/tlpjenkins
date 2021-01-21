@@ -39,9 +39,18 @@ def set_basic_rate_cost_rate_and_total_weight(doc):
             i.basic_rate = total_basic
             i.cost_rate = total_cost
             i.total_weight = get_total_weight(doc)
-            i.amount_of_percent_1 = get_amount_of_percent(i.percent_1, i.cost_rate) 
-            i.amount_of_percent_2 = get_amount_of_percent(i.percent_2, i.cost_rate)
-            i.amount_of_percent_3 =get_amount_of_percent(i.percent_3, i.cost_rate)
+            try:
+                if i.percent_1 != '':
+                    flt_percent_1 = float(i.percent_1)
+                if i.percent_2 != '':
+                    flt_percent_2 = float(i.percent_2)
+                if i.percent_3 != '':
+                    flt_percent_3 = float(i.percent_3)
+            except Exception as e:
+                pass
+            i.amount_of_percent_1 = ((i.cost_rate * flt_percent_1)/100)+i.cost_rate 
+            i.amount_of_percent_2 = ((i.cost_rate * flt_percent_2)/100)+i.cost_rate 
+            i.amount_of_percent_3 = ((i.cost_rate * flt_percent_3)/100)+i.cost_rate 
 
 def get_total_weight(doc):
     total_weight = 0.0
@@ -51,14 +60,5 @@ def get_total_weight(doc):
             total_weight += (i.finished_weight * i.qty)
         return total_weight
 
-def get_amount_of_percent(percent, cost_rate):
-    try:
-        if cost_rate != '':
-            flt_cost_rate = float(cost_rate)
-    except Exception as e:
-        pass
-    return ((flt_cost_rate * percent)/100)+flt_cost_rate
-
-   
    
    
