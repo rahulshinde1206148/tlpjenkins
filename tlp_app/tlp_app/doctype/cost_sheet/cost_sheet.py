@@ -8,11 +8,12 @@ from frappe.model.document import Document
 
 class CostSheet(Document):
     def validate(self):
-        set_basic_rate_cost_rate_and_total_weight(self) 
+        pass
        
     def before_save(self):
-        delete_records()
-        
+        # delete_records()
+        set_basic_rate_cost_rate_and_total_weight(self) 
+    
 def delete_records():
     frappe.db.sql("""delete from `tabMaterial Cost Item`""")
 
@@ -40,17 +41,17 @@ def set_basic_rate_cost_rate_and_total_weight(doc):
             i.cost_rate = total_cost
             i.total_weight = get_total_weight(doc)
             try:
-                if i.percent_1 != '':
+                if i.percent_1 and i.percent_1 != '':
                     flt_percent_1 = float(i.percent_1)
-                if i.percent_2 != '':
+                if i.percent_2 and i.percent_2 != '':
                     flt_percent_2 = float(i.percent_2)
-                if i.percent_3 != '':
+                if i.percent_3 and i.percent_3 != '':
                     flt_percent_3 = float(i.percent_3)
             except Exception as e:
                 pass
-            i.amount_of_percent_1 = ((i.cost_rate * flt_percent_1)/100)+i.cost_rate 
-            i.amount_of_percent_2 = ((i.cost_rate * flt_percent_2)/100)+i.cost_rate 
-            i.amount_of_percent_3 = ((i.cost_rate * flt_percent_3)/100)+i.cost_rate 
+            i.amount_of_percent_1 = ((i.cost_rate * flt_percent_1)/100)+i.cost_rate if flt_percent_1 else 0.0
+            i.amount_of_percent_2 = ((i.cost_rate * flt_percent_2)/100)+i.cost_rate if flt_percent_2 else 0.0
+            i.amount_of_percent_3 = ((i.cost_rate * flt_percent_3)/100)+i.cost_rate if flt_percent_3 else 0.0
 
 def get_total_weight(doc):
     total_weight = 0.0
@@ -59,6 +60,3 @@ def get_total_weight(doc):
         for i in bom.items:
             total_weight += (i.finished_weight * i.qty)
         return total_weight
-
-   
-   

@@ -1,0 +1,166 @@
+{
+ "creation": "2021-01-21 14:05:02.307069",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ri_no",
+  "description",
+  "material_type",
+  "quantity",
+  "material_cost",
+  "labour_cost",
+  "piece_rate",
+  "set_rate",
+  "basic_rate",
+  "percent_on_basic_rate_for_cost_rate",
+  "cost_rate",
+  "percent_1",
+  "amount_of_percent_1",
+  "percent_2",
+  "amount_of_percent_2",
+  "percent_3",
+  "amount_of_percent_3",
+  "is_semifinished"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "ri_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "RI No",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "material_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Material Type",
+   "options": "Made Out Of",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Quantity",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "labour_cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Labour Cost"
+  },
+  {
+   "columns": 1,
+   "fieldname": "piece_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Piece Rate",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "set_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Set Rate",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "basic_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Basic Rate",
+   "read_only": 1
+  },
+  {
+   "default": "1.1",
+   "fieldname": "percent_on_basic_rate_for_cost_rate",
+   "fieldtype": "Percent",
+   "label": "Percent On Basic Rate For Cost Rate"
+  },
+  {
+   "fieldname": "cost_rate",
+   "fieldtype": "Currency",
+   "label": "Cost Rate",
+   "read_only": 1
+  },
+  {
+   "default": "15",
+   "fieldname": "percent_1",
+   "fieldtype": "Percent",
+   "label": "Percent 1"
+  },
+  {
+   "fieldname": "amount_of_percent_1",
+   "fieldtype": "Currency",
+   "label": "Amount Of Percent 1",
+   "read_only": 1
+  },
+  {
+   "default": "25",
+   "fieldname": "percent_2",
+   "fieldtype": "Percent",
+   "label": "Percent 2"
+  },
+  {
+   "fieldname": "amount_of_percent_2",
+   "fieldtype": "Currency",
+   "label": "Amount Of Percent 2",
+   "read_only": 1
+  },
+  {
+   "default": "50",
+   "fieldname": "percent_3",
+   "fieldtype": "Percent",
+   "label": "Percent 3"
+  },
+  {
+   "fieldname": "amount_of_percent_3",
+   "fieldtype": "Currency",
+   "label": "Amount Of Percent 3",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_semifinished",
+   "fieldtype": "Check",
+   "label": "Is Semifinished"
+  },
+  {
+   "columns": 1,
+   "fieldname": "material_cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Material Rs",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-01-21 20:30:24.079301",
+ "modified_by": "Administrator",
+ "module": "Tlp App",
+ "name": "Cost Working Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

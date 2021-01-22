@@ -148,6 +148,21 @@ cur_frm.fields_dict['assembly'].get_query = function(doc) {
 	}
 };
 
+frappe.ui.form.on('Costsheet Items', {
+    percent_1: function(frm, cdt, cdn){
+		var d = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, "amount_of_percent_1", ((d.cost_rate * d.percent_1)/100)+d.cost_rate);
+	},
+	percent_2: function(frm, cdt, cdn){
+		var d = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, "amount_of_percent_2", ((d.cost_rate * d.percent_2)/100)+d.cost_rate);
+	},
+	percent_3: function(frm, cdt, cdn){
+		var d = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, "amount_of_percent_3", ((d.cost_rate * d.percent_3)/100)+d.cost_rate);
+	}
+});
+
 frappe.ui.form.on('Cost Working Items', {
 	labour_cost: function(frm, cdt, cdn){
 		var d = locals[cdt][cdn];
@@ -201,7 +216,7 @@ frappe.ui.form.on('Cost Working Items', {
 			            frappe.model.set_value(cdt, cdn, "basic_rate",  total_fasteners);          
 			        }
 			        else{
-			        	frappe.model.set_value(cdt, cdn, "basic_rate",  ' ');  
+			        	frappe.model.set_value(cdt, cdn, "basic_rate",  0);  
 			        }
 				});
         	}

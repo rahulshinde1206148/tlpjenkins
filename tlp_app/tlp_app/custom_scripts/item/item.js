@@ -8,6 +8,8 @@ frappe.ui.form.on('Item', {
 			}
 		};
 		
+	},
+	setup: function(frm){
 		frappe.call({
 				method: "frappe.client.get_value",
 				args:{
@@ -17,15 +19,13 @@ frappe.ui.form.on('Item', {
 				},
 				callback:function(r) {
 					if(r){
-						frm.set_value("made_out_of", r.message.made_out_of);
+						frappe.model.set_value(frm.doc.doctype, frm.doc.name, "made_out_of", r.message.made_out_of);
 					}
 
-					frm.refresh_fields("item");
+					frm.refresh_fields("made_out_of");
 				}
 			});
-		
-	},
-	setup: function(frm){
+
 		frappe.call({
 			method: "frappe.client.get_value",
 			args:{
@@ -37,8 +37,9 @@ frappe.ui.form.on('Item', {
 			callback:function(r) {
 				if(r){
 					frappe.model.set_value(frm.doc.doctype, frm.doc.name, "galvanization_charges" ,r.message.rskg)
+				    frappe.click_button('Save')
 				}
-				frm.refresh_fields("item");
+				frm.refresh_fields("galvanization_charges");
 			}
 		});
 		frappe.call({
@@ -52,8 +53,9 @@ frappe.ui.form.on('Item', {
 			callback:function(r) {
 				if(r){
 					frappe.model.set_value(frm.doc.doctype, frm.doc.name, "ab_casting_rate" ,r.message.rskg)
+					frappe.click_button('Save')
 				}
-				frm.refresh_fields("item");
+				frm.refresh_fields("ab_casting_rate");
 			}
 		});
 
