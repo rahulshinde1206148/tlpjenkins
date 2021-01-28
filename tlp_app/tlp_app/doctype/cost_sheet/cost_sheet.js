@@ -41,7 +41,7 @@ frappe.ui.form.on('Cost Sheet', {
 							d.material_type = r.message.made_out_of;
 							d.finished_weightkg = r.message.finished_weight;
 							d.rough_weightkg = r.message.weight_per_unit;
-							d.material_cost = r.message.valuation_rate * r.message.weight_per_unit;
+							d.material_cost = r.message.ab_8_melting_loss * r.message.weight_per_unit;
 						}
 						frm.refresh_fields("material_cost_items");
 					}
@@ -55,6 +55,7 @@ frappe.ui.form.on('Cost Sheet', {
             }
          });
         //add items on operation or labour items
+        var sum_of_operations = 0.0;
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
 	        $.each(tabletransfer.items, function(index, row){
@@ -75,6 +76,37 @@ frappe.ui.form.on('Cost Sheet', {
 								d.rough_weightkg = r.message.weight_per_unit;
 								d.casting = r.message.weight_per_unit * r.message.ab_casting_rate;
 								d.galvanization = r.message.finished_weight * r.message.galvanization_charges;
+								if (d.casting){
+									sum_of_operations = sum_of_operations + d.casting
+								}
+								if (d.galvanization){
+									sum_of_operations = sum_of_operations + d.galvanization
+								}
+								if (d.drilling){
+									sum_of_operations = sum_of_operations + d.drilling
+								}
+								if (d.bending){
+									sum_of_operations = sum_of_operations + d.bending
+								}
+								if (d.maching){
+									sum_of_operations = sum_of_operations + d.maching
+								}
+								if (d.welding){
+									sum_of_operations = sum_of_operations + d.welding
+								}
+								if (d.forging){
+									sum_of_operations = sum_of_operations + d.forging
+								}
+								if (d.file){
+									sum_of_operations = sum_of_operations + d.file
+								}
+								if (d.die){
+									sum_of_operations = sum_of_operations + d.die
+								}
+								if (d.miscellaneous){
+									sum_of_operations = sum_of_operations + d.miscellaneous
+								}
+								d.labour_cost = sum_of_operations * r.message.cost_on_labour_factor
 							}
 							frm.refresh_fields("operation_or_labour_items");
 						}
@@ -93,6 +125,7 @@ frappe.ui.form.on('Cost Sheet', {
 	            d.description = row.description;
 	            d.quantity = row.qty;
                 d.is_semifinished = row.is_semifinished
+               
 	            frappe.call({
 					method: "frappe.client.get",
 					args:{
@@ -103,20 +136,21 @@ frappe.ui.form.on('Cost Sheet', {
 						if(r){
 							d.material_type = r.message.made_out_of;
 							frm.refresh_fields("cost_working_items");
-
-							if(r.message.valuation_rate && r.message.weight_per_unit){
-								d.material_cost = r.message.valuation_rate * r.message.weight_per_unit;
-							}
-							else{
-								frappe.throw({message:__("Please add valuation_rate and Rought weight in Item master for item", +(r.message.item_name)), title: __("Mandatory")});
-							}
+							d.material_cost =  r.message.ab_8_melting_loss * r.message.weight_per_unit;
+							$.each(frm.doc.operation_or_labour_items , function(index, row){
+								frm.refresh_fields("cost_working_items");
+								if(row.ri_no == d.ri_no){
+									d.labour_cost = row.labour_cost
+									frm.refresh_fields("cost_working_items");
+								}
+						    });
                             if(d.labour_cost){
 								d.piece_rate = d.material_cost + d.labour_cost;
 							}
-							// else{
-							// 	frappe.throw({message:__("Please add labour cost for item <b>{0}</b> on Cost Working Items table",[r.message.item_code]), title: __("Mandatory")});
-							// }
-                          
+							if(d.piece_rate){
+								d.set_rate = d.piece_rate * d.quantity;
+							}
+
 						frm.refresh_fields("cost_working_items");
 							}
 					}
@@ -130,6 +164,7 @@ frappe.ui.form.on('Cost Sheet', {
 	}
 	
 });
+
 cur_frm.fields_dict['item_name'].get_query = function(doc) {
 	return{
 		filters: [
@@ -162,7 +197,6 @@ frappe.ui.form.on('Costsheet Items', {
 		frappe.model.set_value(cdt, cdn, "amount_of_percent_3", ((d.cost_rate * d.percent_3)/100)+d.cost_rate);
 	}
 });
-
 frappe.ui.form.on('Cost Working Items', {
 	labour_cost: function(frm, cdt, cdn){
 		var d = locals[cdt][cdn];

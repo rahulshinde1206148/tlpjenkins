@@ -1,0 +1,62 @@
+{
+ "autoname": "field:fasterner_item",
+ "creation": "2021-01-27 12:23:10.516613",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "fasterner_item",
+  "rskg",
+  "made_out_of",
+  "has_formulae",
+  "formulae"
+ ],
+ "fields": [
+  {
+   "fieldname": "fasterner_item",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Fasterner Item Type",
+   "unique": 1
+  },
+  {
+   "fieldname": "rskg",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rs/kg"
+  },
+  {
+   "fieldname": "made_out_of",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Made Out Of",
+   "options": "Made Out Of"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_formulae",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Has Formulae"
+  },
+  {
+   "fieldname": "formulae",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Formulae"
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-01-27 18:12:57.775883",
+ "modified_by": "Administrator",
+ "module": "Tlp App",
+ "name": "Fasteners Type",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

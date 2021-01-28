@@ -12,9 +12,11 @@ frappe.ui.form.on('TLP Setting Page', {
 		 	}
 		 	if (row.parameter == 'AB Alloy'){
 		 		row.rskg = ab_alloy
+		 		frm.reload_doc();
 		 	}
 		 	if(row.parameter == 'AB Alloy (AB) + 8% Melting Loss'){
                  row.rskg = ab_alloy * 1.08
+                 frm.reload_doc();
 		 	}
 		});
 		if(frm.doc.labour_factor){

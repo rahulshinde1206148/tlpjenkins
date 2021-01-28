@@ -12,7 +12,9 @@
   "labour_factor",
   "cost_on_labour_factor",
   "overheads",
-  "cost_on_overheads"
+  "cost_on_overheads",
+  "fasteners_section_section",
+  "fasteners"
  ],
  "fields": [
   {
@@ -57,9 +59,20 @@
    "fieldname": "cost_on_overheads",
    "fieldtype": "Currency",
    "label": "Cost on Overheads"
+  },
+  {
+   "fieldname": "fasteners_section_section",
+   "fieldtype": "Section Break",
+   "label": "Fasteners Section"
+  },
+  {
+   "fieldname": "fasteners",
+   "fieldtype": "Table",
+   "label": "Fasteners",
+   "options": "Fasteners Type"
   }
  ],
- "modified": "2021-01-19 15:24:02.964799",
+ "modified": "2021-01-27 13:37:13.010332",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "TLP Setting Page",
