@@ -2,6 +2,7 @@
 // For license information, please see license.txt
 var total_fasteners = 0.0;
 var finished_weight = 0.0;
+var cost_on_labour_factor = 0.0
 frappe.ui.form.on('Cost Sheet', {
 	assembly: function(frm){
 		frm.set_df_property('assembly', 'read_only', 1);
@@ -50,12 +51,11 @@ frappe.ui.form.on('Cost Sheet', {
 	                frm.refresh_field("material_cost_items");
             	}
             });
-            if(semifinished == 0){
+            if(semifinshed== 0){
             		frappe.throw({message:__("None of the items are semifinished from selected asssembly")});
             }
          });
         //add items on operation or labour items
-        var sum_of_operations = 0.0;
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
 	        $.each(tabletransfer.items, function(index, row){
@@ -74,39 +74,9 @@ frappe.ui.form.on('Cost Sheet', {
 							if(r){
 								d.material_type = r.message.made_out_of;
 								d.rough_weightkg = r.message.weight_per_unit;
+								get_operations_data(frm);
 								d.casting = r.message.weight_per_unit * r.message.ab_casting_rate;
 								d.galvanization = r.message.finished_weight * r.message.galvanization_charges;
-								if (d.casting){
-									sum_of_operations = sum_of_operations + d.casting
-								}
-								if (d.galvanization){
-									sum_of_operations = sum_of_operations + d.galvanization
-								}
-								if (d.drilling){
-									sum_of_operations = sum_of_operations + d.drilling
-								}
-								if (d.bending){
-									sum_of_operations = sum_of_operations + d.bending
-								}
-								if (d.maching){
-									sum_of_operations = sum_of_operations + d.maching
-								}
-								if (d.welding){
-									sum_of_operations = sum_of_operations + d.welding
-								}
-								if (d.forging){
-									sum_of_operations = sum_of_operations + d.forging
-								}
-								if (d.file){
-									sum_of_operations = sum_of_operations + d.file
-								}
-								if (d.die){
-									sum_of_operations = sum_of_operations + d.die
-								}
-								if (d.miscellaneous){
-									sum_of_operations = sum_of_operations + d.miscellaneous
-								}
-								d.labour_cost = sum_of_operations * r.message.cost_on_labour_factor
 							}
 							frm.refresh_fields("operation_or_labour_items");
 						}
@@ -114,6 +84,7 @@ frappe.ui.form.on('Cost Sheet', {
 	            }
             });
 	     });
+       
         //add items on cost working items
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
@@ -164,6 +135,43 @@ frappe.ui.form.on('Cost Sheet', {
 	}
 	
 });
+
+var get_operations_data = function(frm) {
+	var d = cur_frm.doc.operation_or_labour_items;
+	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
+        var tabletransfer= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
+        cost_on_labour_factor = tabletransfer.cost_on_labour_factor
+        $.each(tabletransfer.operations_with_cost, function(index, row){
+        	$.each(d, function(i, r){
+	        	if (row.operations == 'Drilling'){
+                   r.drilling = row.cost;
+	        	}
+	        	if (row.operations == 'Bending'){
+                   r.bending = row.cost;
+	        	}
+	        	if (row.operations == 'Machining'){
+                   r.maching = row.cost;
+	        	}
+	        	if (row.operations == 'Welding'){
+                   r.welding = row.cost;
+	        	}
+	        	if (row.operations == 'Forging'){
+                   r.forging = row.cost;
+	        	}
+	        	if (row.operations == 'File'){
+                   r.file = row.cost;
+	        	}
+	        	if (row.operations == 'Die'){
+                   r.die = row.cost;
+	        	}
+	        	if (row.operations == 'Miscellaneous'){
+                   r.miscellaneous = row.cost;
+	        	}
+        	});
+            frm.refresh_fields("operation_or_labour_items");
+        });
+    });	
+};
 
 cur_frm.fields_dict['item_name'].get_query = function(doc) {
 	return{

@@ -1,6 +1,6 @@
 {
  "autoname": "TLP.-.Setting.-.#####",
- "creation": "2021-01-29 11:02:13.302849",
+ "creation": "2021-02-02 15:32:03.565765",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -14,7 +14,9 @@
   "overheads",
   "cost_on_overheads",
   "fasteners_section_section",
-  "fasteners"
+  "fasteners",
+  "section_break_11",
+  "operations_with_cost"
  ],
  "fields": [
   {
@@ -63,17 +65,28 @@
   {
    "fieldname": "fasteners_section_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Fasteners Section"
   },
   {
    "fieldname": "fasteners",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Fasteners",
    "options": "Fasteners Type"
+  },
+  {
+   "fieldname": "section_break_11",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "operations_with_cost",
+   "fieldtype": "Table",
+   "label": "Operations With Cost",
+   "options": "Operations For Cost Sheet"
   }
  ],
- "issingle": 1,
- "modified": "2021-01-29 11:02:13.302849",
+ "modified": "2021-02-02 15:32:03.565765",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "TLP Setting Page",

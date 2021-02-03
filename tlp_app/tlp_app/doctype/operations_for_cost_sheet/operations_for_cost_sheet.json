@@ -1,0 +1,38 @@
+{
+ "autoname": "field:operations",
+ "creation": "2021-02-02 11:07:00.072637",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "operations",
+  "cost"
+ ],
+ "fields": [
+  {
+   "fieldname": "operations",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Operations",
+   "options": "Operation",
+   "unique": 1
+  },
+  {
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cost"
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-02-02 11:14:37.820682",
+ "modified_by": "Administrator",
+ "module": "Tlp App",
+ "name": "Operations For Cost Sheet",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
