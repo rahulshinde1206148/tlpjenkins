@@ -20,55 +20,7 @@ frappe.ui.form.on('Item', {
 				}
 			}
 		});
-	},
-	galvanization_parameter: function(frm){
-		frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
-	        var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
-	        $.each(table.ferrous, function(index, row){
-	        	if (row.parameter == frm.doc.galvanization_parameter){
-	        		frm.doc.galvanization_charges = row.rskg
-	        	}
-	        });	
-	        $.each(table.aluminium, function(index, row){
-	        	if (row.parameter == frm.doc.galvanization_parameter){
-	        		frm.doc.galvanization_charges = row.rskg
-	        	}
-	        });	
-	        $.each(table.aluminium_bronze, function(index, row){
-	        	if (row.parameter == frm.doc.galvanization_parameter){
-	        		frm.doc.galvanization_charges = row.rskg
-	        	}
-	        });	
-        	frm.save();
-	    });
-	},
-
-	casting_parameter: function(frm){
-		frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
-	        var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
-	        $.each(table.ferrous, function(index, row){
-	        	if (row.parameter == frm.doc.casting_parameter){
-	        		frm.doc.ab_casting_rate = row.rskg
-	        	}
-	        });	
-	        $.each(table.aluminium, function(index, row){
-	        	if (row.parameter == frm.doc.casting_parameter){
-	        		frm.doc.ab_casting_rate = row.rskg
-	        	}
-	        });	
-	        $.each(table.aluminium_bronze, function(index, row){
-	        	if (row.parameter == frm.doc.casting_parameter){
-	        		frm.doc.ab_casting_rate = row.rskg
-	        	}
-	        	if (row.parameter == 'AB Alloy (AB) + 8% Melting Loss'){
-	        		frm.set_value('ab_8_melting_loss', row.rskg)
-	        	}
-	        	if (row.parameter == 'AB Casting rate for GENERAL items (CR1)'){
-	        		frm.set_value('ab_casting_rate', row.rskg)
-	        	}
-	        });	
-	    });
-	},
+	}
 	is_fastners: function(frm){
 		if(frm.doc.is_fastners == 1){
 			cur_frm.fields_dict['fasteners_type'].get_query = function(doc) {
@@ -79,19 +31,5 @@ frappe.ui.form.on('Item', {
 				}
 			};
 		}
-	},
-	setup:function(frm){
-		frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
-        var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
-		$.each(table.aluminium_bronze, function(index, row){
-        	if (row.parameter == 'AB Alloy (AB) + 8% Melting Loss'){
-        		frm.set_value('ab_8_melting_loss', row.rskg)
-        	}
-        });	
-        if (table.cost_on_labour_factor){
-    		frm.set_value("cost_on_labour_factor", table.cost_on_labour_factor)
-    	}
-    	frm.save();
-	   });
 	}
 });

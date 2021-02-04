@@ -3,6 +3,9 @@
 var total_fasteners = 0.0;
 var finished_weight = 0.0;
 var cost_on_labour_factor = 0.0
+var ab_8_melting_loss = 0.0
+var galvanization_charges = 0.0
+var casting_charges = 0.0
 frappe.ui.form.on('Cost Sheet', {
 	assembly: function(frm){
 		frm.set_df_property('assembly', 'read_only', 1);
@@ -42,7 +45,7 @@ frappe.ui.form.on('Cost Sheet', {
 							d.material_type = r.message.made_out_of;
 							d.finished_weightkg = r.message.finished_weight;
 							d.rough_weightkg = r.message.weight_per_unit;
-							d.material_cost = r.message.ab_8_melting_loss * r.message.weight_per_unit;
+							d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
 						}
 						frm.refresh_fields("material_cost_items");
 					}
@@ -72,11 +75,12 @@ frappe.ui.form.on('Cost Sheet', {
 					    },
 						callback:function(r) {
 							if(r){
+								get_parameters_cost(r.message.galvanization_parameter,r.message.casting_parameter)
 								d.material_type = r.message.made_out_of;
 								d.rough_weightkg = r.message.weight_per_unit;
 								get_operations_data(frm);
-								d.casting = r.message.weight_per_unit * r.message.ab_casting_rate;
-								d.galvanization = r.message.finished_weight * r.message.galvanization_charges;
+								d.casting = r.message.weight_per_unit * casting_charges ;
+								d.galvanization = r.message.finished_weight * galvanization_charges ;
 							}
 							frm.refresh_fields("operation_or_labour_items");
 						}
@@ -90,6 +94,7 @@ frappe.ui.form.on('Cost Sheet', {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
 	        var total_fasteners = 0.0;
 	        var total_weight = 0.0;
+
 	        $.each(tabletransfer.items, function(index, row){
 	            var d = frm.add_child("cost_working_items");
 	            d.ri_no = row.item_code;
@@ -107,7 +112,7 @@ frappe.ui.form.on('Cost Sheet', {
 						if(r){
 							d.material_type = r.message.made_out_of;
 							frm.refresh_fields("cost_working_items");
-							d.material_cost =  r.message.ab_8_melting_loss * r.message.weight_per_unit;
+							d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
 							$.each(frm.doc.operation_or_labour_items , function(index, row){
 								frm.refresh_fields("cost_working_items");
 								if(row.ri_no == d.ri_no){
@@ -132,9 +137,51 @@ frappe.ui.form.on('Cost Sheet', {
 	},
 	refresh:function(frm){
  		$(".grid-add-row").hide();
+ 		get_ab_8_melting_loss(frm);
 	}
 	
 });
+
+var get_ab_8_melting_loss = function(frm) {
+	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
+		var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
+        $.each(table.aluminium_bronze, function(index, row){
+        	if (row.parameter == 'AB Alloy (AB) + 8% Melting Loss'){
+        		ab_8_melting_loss = row.rskg;
+        	}
+        });	
+    });
+};
+
+var get_parameters_cost = function(galvanization_parameter,casting_parameter ){
+	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
+        var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
+        $.each(table.ferrous, function(index, row){
+        	if (row.parameter == galvanization_parameter){
+        		galvanization_charges = row.rskg
+        	}
+        	if (row.parameter == casting_parameter){
+        		casting_charges = row.rskg
+        	}
+        });	
+        $.each(table.aluminium, function(index, row){
+        	if (row.parameter == galvanization_parameter){
+        		galvanization_charges = row.rskg
+        	}
+        	if (row.parameter == casting_parameter){
+        		casting_charges = row.rskg
+        	}
+        });	
+        $.each(table.aluminium_bronze, function(index, row){
+        	if (row.parameter == galvanization_parameter){
+        		galvanization_charges = row.rskg
+        	}
+        	if (row.parameter == casting_parameter){
+        		casting_charges = row.rskg
+        	}
+        });	
+    });
+};
 
 var get_operations_data = function(frm) {
 	var d = cur_frm.doc.operation_or_labour_items;
