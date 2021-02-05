@@ -1,0 +1,98 @@
+{
+ "autoname": "field:ri_no",
+ "creation": "2021-02-05 12:16:47.069403",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ri_no",
+  "drilling",
+  "bending",
+  "machining",
+  "welding",
+  "forging",
+  "file",
+  "die",
+  "miscellaneous"
+ ],
+ "fields": [
+  {
+   "fieldname": "ri_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "RI No",
+   "options": "Item",
+   "unique": 1
+  },
+  {
+   "fieldname": "drilling",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Drilling "
+  },
+  {
+   "fieldname": "bending",
+   "fieldtype": "Currency",
+   "label": "Bending"
+  },
+  {
+   "fieldname": "machining",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Machining"
+  },
+  {
+   "fieldname": "forging",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Forging"
+  },
+  {
+   "fieldname": "file",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "File"
+  },
+  {
+   "fieldname": "die",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Die"
+  },
+  {
+   "fieldname": "miscellaneous",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Miscellaneous"
+  },
+  {
+   "fieldname": "welding",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Welding"
+  }
+ ],
+ "modified": "2021-02-05 15:37:59.869427",
+ "modified_by": "Administrator",
+ "module": "Tlp App",
+ "name": "Opearation Cost Setting",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

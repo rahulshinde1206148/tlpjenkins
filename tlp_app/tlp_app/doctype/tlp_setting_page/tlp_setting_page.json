@@ -14,9 +14,7 @@
   "overheads",
   "cost_on_overheads",
   "fasteners_section_section",
-  "fasteners",
-  "section_break_11",
-  "operations_with_cost"
+  "fasteners"
  ],
  "fields": [
   {
@@ -74,19 +72,9 @@
    "hidden": 1,
    "label": "Fasteners",
    "options": "Fasteners Type"
-  },
-  {
-   "fieldname": "section_break_11",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "operations_with_cost",
-   "fieldtype": "Table",
-   "label": "Operations With Cost",
-   "options": "Operations For Cost Sheet"
   }
  ],
- "modified": "2021-02-02 15:32:03.565765",
+ "modified": "2021-02-05 11:58:52.532463",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "TLP Setting Page",

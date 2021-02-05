@@ -36,7 +36,7 @@
    "columns": 1,
    "fieldname": "description",
    "fieldtype": "Text Editor",
-   "in_list_view": 1,
+   "hidden": 1,
    "label": "Description",
    "read_only": 1
   },
@@ -44,7 +44,7 @@
    "columns": 1,
    "fieldname": "material_type",
    "fieldtype": "Link",
-   "in_list_view": 1,
+   "hidden": 1,
    "label": "Material Type",
    "options": "Made Out Of",
    "read_only": 1
@@ -53,7 +53,6 @@
    "columns": 1,
    "fieldname": "quantity",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "Quantity",
    "read_only": 1
   },
@@ -94,23 +93,31 @@
    "label": "Welding"
   },
   {
+   "columns": 1,
    "fieldname": "forging",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Forging"
   },
   {
+   "columns": 1,
    "fieldname": "file",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "File"
   },
   {
+   "columns": 1,
    "fieldname": "die",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Die"
   },
   {
+   "columns": 1,
    "fieldname": "galvanization",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Galvanization",
    "read_only": 1
   },
@@ -122,6 +129,7 @@
   {
    "fieldname": "labour_cost",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Labour Cost",
    "read_only": 1
   },
@@ -129,9 +137,8 @@
    "columns": 1,
    "fieldname": "rough_weightkg",
    "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Rough Weight(KG)",
-   "read_only": 1
+   "hidden": 1,
+   "label": "Rough Weight(KG)"
   },
   {
    "fieldname": "column_break_9",
@@ -139,7 +146,7 @@
   }
  ],
  "istable": 1,
- "modified": "2021-02-02 17:20:31.912376",
+ "modified": "2021-02-04 14:34:42.951815",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Operation or Labour Items",

@@ -67,6 +67,8 @@ frappe.ui.form.on('Cost Sheet', {
 		            d.ri_no = row.item_code;
 		            d.description = row.description;
 		            d.quantity = row.qty;
+		            get_operations_data(frm);
+
 		            frappe.call({
 						method: "frappe.client.get",
 						args:{
@@ -78,7 +80,7 @@ frappe.ui.form.on('Cost Sheet', {
 								get_parameters_cost(r.message.galvanization_parameter,r.message.casting_parameter)
 								d.material_type = r.message.made_out_of;
 								d.rough_weightkg = r.message.weight_per_unit;
-								get_operations_data(frm);
+								
 								d.casting = r.message.weight_per_unit * casting_charges ;
 								d.galvanization = r.message.finished_weight * galvanization_charges ;
 							}
@@ -184,40 +186,44 @@ var get_parameters_cost = function(galvanization_parameter,casting_parameter ){
 };
 
 var get_operations_data = function(frm) {
-	var d = cur_frm.doc.operation_or_labour_items;
-	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
-        var tabletransfer= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
-        cost_on_labour_factor = tabletransfer.cost_on_labour_factor
-        $.each(tabletransfer.operations_with_cost, function(index, row){
-        	$.each(d, function(i, r){
-	        	if (row.operations == 'Drilling'){
-                   r.drilling = row.cost;
-	        	}
-	        	if (row.operations == 'Bending'){
-                   r.bending = row.cost;
-	        	}
-	        	if (row.operations == 'Machining'){
-                   r.maching = row.cost;
-	        	}
-	        	if (row.operations == 'Welding'){
-                   r.welding = row.cost;
-	        	}
-	        	if (row.operations == 'Forging'){
-                   r.forging = row.cost;
-	        	}
-	        	if (row.operations == 'File'){
-                   r.file = row.cost;
-	        	}
-	        	if (row.operations == 'Die'){
-                   r.die = row.cost;
-	        	}
-	        	if (row.operations == 'Miscellaneous'){
-                   r.miscellaneous = row.cost;
-	        	}
-        	});
-            frm.refresh_fields("operation_or_labour_items");
-        });
-    });	
+	$.each(frm.doc.operation_or_labour_items, function(index, row){
+	    frappe.call({
+			method: "frappe.client.get",
+			args:{
+				doctype: "Opearation Cost Setting",
+				filters: {'ri_no': row.ri_no}
+		    },
+			callback:function(r) {
+				if(r){
+					if (r.message.drilling){
+	                   row.drilling = r.message.drilling;
+		        	}
+		        	if (r.message.bending){
+	                   row.bending = r.message.bending;
+		        	}
+		        	if (r.message.welding){
+	                   row.welding = r.message.welding;
+		        	}
+		        	if (r.message.machining){
+	                   row.maching = r.message.machining;
+		        	}
+		        	if (r.message.forging){
+	                   row.forging = r.message.forging;
+		        	}
+		        	if (r.message.file){
+	                   row.file = r.message.file;
+		        	}
+		        	if (r.message.die){
+	                   row.die = r.message.die;
+		        	}
+		        	if (r.message.miscellaneous){
+	                   row.miscellaneous = r.message.miscellaneous;
+		        	}
+				}
+				frm.refresh_fields("operation_or_labour_items");
+			}
+		});
+	});
 };
 
 cur_frm.fields_dict['item_name'].get_query = function(doc) {
