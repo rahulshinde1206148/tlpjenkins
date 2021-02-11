@@ -5,7 +5,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "ri_no",
+  "item_name",
   "assembly",
   "section_break_4",
   "costsheet_items",
@@ -85,7 +85,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "ri_no",
+   "fieldname": "item_name",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item Name",
@@ -95,7 +95,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2021-02-10 16:40:07.198801",
+ "modified": "2021-02-11 11:18:20.243629",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Cost Sheet",
@@ -116,6 +116,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "ri_no",
+ "title_field": "item_name",
  "track_changes": 1
 }

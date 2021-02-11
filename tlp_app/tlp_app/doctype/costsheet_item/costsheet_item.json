@@ -1,11 +1,10 @@
 {
- "autoname": "field:item_name",
  "creation": "2021-01-05 18:07:46.579775",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "item_name",
+  "ri_no",
   "description",
   "total_weight",
   "column_break_6",
@@ -21,16 +20,6 @@
   "without"
  ],
  "fields": [
-  {
-   "columns": 1,
-   "fieldname": "item_name",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item Name",
-   "options": "Item",
-   "read_only": 1,
-   "unique": 1
-  },
   {
    "columns": 2,
    "fieldname": "description",
@@ -115,10 +104,20 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Without"
+  },
+  {
+   "columns": 1,
+   "fieldname": "ri_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "options": "Item",
+   "read_only": 1,
+   "unique": 1
   }
  ],
  "istable": 1,
- "modified": "2021-01-18 17:16:42.443718",
+ "modified": "2021-02-11 11:20:29.895134",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Costsheet Item",
