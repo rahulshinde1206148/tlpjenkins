@@ -1,5 +1,4 @@
 {
- "autoname": "field:ri_no",
  "creation": "2021-01-06 11:41:53.993153",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -69,7 +68,7 @@
   }
  ],
  "istable": 1,
- "modified": "2021-01-15 18:44:59.358981",
+ "modified": "2021-02-09 14:47:55.207979",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Material Cost Item",

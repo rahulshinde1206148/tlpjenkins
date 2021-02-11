@@ -14,12 +14,12 @@ frappe.ui.form.on('Cost Sheet', {
 				method: "frappe.client.get",
 				args:{
 					doctype: "Item",
-					filters: {'name': frm.doc.item_name}
+					filters: {'name': frm.doc.ri_no}
 				},
 				callback:function(r) {
 					if(r){
 					var childTable = cur_frm.add_child("costsheet_items");
-                      childTable.item_name=r.message.item_code
+                      childTable.ri_no=r.message.item_code
                       childTable.description=r.message.description
 					}
 					frm.refresh_fields("costsheet_items");
@@ -226,7 +226,7 @@ var get_operations_data = function(frm) {
 	});
 };
 
-cur_frm.fields_dict['item_name'].get_query = function(doc) {
+cur_frm.fields_dict['ri_no'].get_query = function(doc) {
 	return{
 		filters: [
 			['Item','is_costsheet', '=' ,1]
@@ -238,7 +238,7 @@ cur_frm.fields_dict['assembly'].get_query = function(doc) {
 	return{
 		filters: [
 			['BOM','is_assembly', '=' ,1],
-			['BOM','item', '=' , doc.item_name],
+			['BOM','item', '=' , doc.ri_no],
 			['BOM','is_default_assembly', '=' , 1]
 		]
 	}

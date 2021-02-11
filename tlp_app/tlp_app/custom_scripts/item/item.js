@@ -20,7 +20,7 @@ frappe.ui.form.on('Item', {
 				}
 			}
 		});
-	}
+	},
 	is_fastners: function(frm){
 		if(frm.doc.is_fastners == 1){
 			cur_frm.fields_dict['fasteners_type'].get_query = function(doc) {

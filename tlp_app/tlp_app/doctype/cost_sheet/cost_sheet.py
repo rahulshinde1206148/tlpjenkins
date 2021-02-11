@@ -63,15 +63,15 @@ def set_basic_rate_cost_rate(doc):
             if flt(i.percent_1) > 0:
                 i.amount_of_percent_1 = ((i.cost_rate * flt(i.percent_1))/100)+i.cost_rate
             else:
-                throw(_("Please add value of <b>Percent 1</b> for the item {0}". format(i.item_name )))
+                throw(_("Please add value of <b>Percent 1</b> for the item {0}". format(i.ri_no )))
             if flt(i.percent_2)  > 0:
                 i.amount_of_percent_2 = ((i.cost_rate * flt(i.percent_2))/100)+i.cost_rate
             else:
-                throw(_("Please add value of <b>Percent 2</b> for the item {0}". format(i.item_name )))
+                throw(_("Please add value of <b>Percent 2</b> for the item {0}". format(i.ri_no )))
             if flt(i.percent_3) > 0:
                 i.amount_of_percent_3 = ((i.cost_rate * flt(i.percent_3))/100)+i.cost_rate
             else:
-                throw(_("Please add value of <b>Percent 3</b> for the item {0}". format(i.item_name )))
+                throw(_("Please add value of <b>Percent 3</b> for the item {0}". format(i.ri_no )))
 
 def calculate_amount_of_percentge(doc):
     for i in doc.cost_working_items:
