@@ -23,7 +23,7 @@ class CostSheet(Document):
 def get_value_of_fastneres_from_purchase_invoice(doc):
     if doc.cost_working_items:
         for i in doc.cost_working_items:
-            if i.is_semifinished == 0 :
+            if i.is_fastners == 1:
                 fasteners_data = frappe.db.sql("""SELECT qty, item_cost from `tabPurchase Invoice Item` 
                     where docstatus=1 and item_code='{0}' """.format(i.ri_no), as_dict=1)
                 result = dict(functools.reduce(operator.add, map(collections.Counter, fasteners_data)))
@@ -39,7 +39,7 @@ def set_basic_rate_cost_rate(doc):
         total_basic, total_cost, total_fasteners = 0.0, 0.0, 0.0;
         for i in doc.cost_working_items:
             if i.set_rate:
-                if i.is_semifinished == 1:
+                if i.is_fastners == 0:
                     i.basic_rate = i.set_rate
                 else:
                     bom_doc = frappe.get_doc("BOM", doc.assembly)

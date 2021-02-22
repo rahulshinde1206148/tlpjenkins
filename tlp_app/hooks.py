@@ -89,12 +89,14 @@ doc_events = {
 # 		"on_trash": "method"
 #	}
     "BOM":{
+        "autoname" : "tlp_app.tlp_app.custom_scripts.bom.bom.autoname",
 		"on_submit" : "tlp_app.tlp_app.custom_scripts.bom.bom.on_submit",
 		"on_update_after_submit" : "tlp_app.tlp_app.custom_scripts.bom.bom.on_update_after_submit"
 	},
 	"Purchase Invoice":{
 		"validate" : "tlp_app.tlp_app.custom_scripts.purchase_invoice.purchase_invoice.validate",
 	}
+	
 
 }
 

@@ -13,7 +13,6 @@
   "piece_rate",
   "set_rate",
   "basic_rate",
-  "percent_on_basic_rate_for_cost_rate",
   "cost_rate",
   "percent_1",
   "amount_of_percent_1",
@@ -21,7 +20,7 @@
   "amount_of_percent_2",
   "percent_3",
   "amount_of_percent_3",
-  "is_semifinished"
+  "is_fasteners"
  ],
  "fields": [
   {
@@ -91,13 +90,6 @@
    "read_only": 1
   },
   {
-   "default": "1.1",
-   "fieldname": "percent_on_basic_rate_for_cost_rate",
-   "fieldtype": "Percent",
-   "label": "Percent On Basic Rate For Cost Rate",
-   "read_only": 1
-  },
-  {
    "fieldname": "cost_rate",
    "fieldtype": "Currency",
    "label": "Cost Rate",
@@ -140,23 +132,22 @@
    "read_only": 1
   },
   {
-   "default": "0",
-   "fieldname": "is_semifinished",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Is Semifinished"
-  },
-  {
    "columns": 1,
    "fieldname": "material_cost",
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Material Rs",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_fasteners",
+   "fieldtype": "Check",
+   "label": "Is Fasteners"
   }
  ],
  "istable": 1,
- "modified": "2021-02-03 17:54:20.379907",
+ "modified": "2021-02-12 14:04:13.609073",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Cost Working Items",

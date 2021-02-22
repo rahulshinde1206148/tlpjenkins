@@ -13,7 +13,8 @@ frappe.ui.form.on('TLP Setting Page', {
 		 	if (row.parameter == 'AB Alloy'){
 		 		row.rskg = ab_alloy
 		 	}
-		 	if(row.parameter == 'AB Alloy (AB) + 8% Melting Loss'){
+		 	if((row.parameter).includes('AB Alloy (AB) +') && (row.parameter).includes('Melting Loss')){
+		 		console.log("gg")
                  row.rskg = ab_alloy * 1.08
                  frm.save()
 		 	}
