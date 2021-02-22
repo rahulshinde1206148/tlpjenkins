@@ -96,6 +96,9 @@ frappe.query_reports["Cost Sheet Report"] = {
 		report.page.add_inner_button(__("Update the Cost"), function() {
 			var me = frappe.query_report;
 			me.title = me.report_name;
+			report_data = me.get_values()
+			console.log("@@@@@@@@@@@@@ report", report.columns)
+			console.log("@@@@@@@@@@@@@ report", report.data)
 			var filters = {}
 			console.log("!!!!!!!!!!!changed_arg", changed_arg)
 			frappe.query_report
