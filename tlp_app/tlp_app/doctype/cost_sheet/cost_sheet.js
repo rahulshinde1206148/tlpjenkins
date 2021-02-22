@@ -217,6 +217,9 @@ var get_operations_data = function(frm) {
 	                   row.miscellaneous = r.message.miscellaneous;
 		        	}
 				}
+				else{
+					frappe.msgprint(__("Please add operation cost on Opearation Cost Setting"))
+				}
 				frm.refresh_fields("operation_or_labour_items");
 			}
 		});

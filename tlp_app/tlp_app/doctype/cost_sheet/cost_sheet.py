@@ -23,11 +23,14 @@ class CostSheet(Document):
 def get_value_of_fastneres_from_purchase_invoice(doc):
     if doc.cost_working_items:
         for i in doc.cost_working_items:
-            if i.is_fastners == 1:
+            if i.is_fasteners == 1:
                 fasteners_data = frappe.db.sql("""SELECT qty, item_cost from `tabPurchase Invoice Item` 
                     where docstatus=1 and item_code='{0}' """.format(i.ri_no), as_dict=1)
-                result = dict(functools.reduce(operator.add, map(collections.Counter, fasteners_data)))
-                i.piece_rate = result.get('item_cost') // result.get('qty')
+                if fasteners_data:
+                    result = dict(functools.reduce(operator.add, map(collections.Counter, fasteners_data)))
+                    i.piece_rate = result.get('item_cost') // result.get('qty')
+                else:
+                    throw(_("Please create purchase invoice for fasteners items "))
             else:
                 if i.labour_cost and i.material_cost:
                     i.piece_rate = i.labour_cost + i.material_cost
@@ -39,7 +42,7 @@ def set_basic_rate_cost_rate(doc):
         total_basic, total_cost, total_fasteners = 0.0, 0.0, 0.0;
         for i in doc.cost_working_items:
             if i.set_rate:
-                if i.is_fastners == 0:
+                if i.is_fasteners == 0:
                     i.basic_rate = i.set_rate
                 else:
                     bom_doc = frappe.get_doc("BOM", doc.assembly)
@@ -120,7 +123,9 @@ def set_labour_cost(doc):
             sum_of_operations += float(i.galvanization) 
         if i.miscellaneous :
             sum_of_operations += float(i.miscellaneous) 
-        labour_factor= frappe.db.get_value("Item", {'name':i.ri_no}, 'cost_on_labour_factor')
+        tlp_setting_doc = frappe.get_doc("TLP Setting Page","TLP-Setting-00001")
+        if tlp_setting_doc.cost_on_overheads :
+            labour_factor= frappe.db.get_value("TLP Setting Page", {'name':"TLP-Setting-00001"}, 'labour_factor')
         i.labour_cost = sum_of_operations * labour_factor
         for j in doc.cost_working_items:
             if j.ri_no == i.ri_no:
