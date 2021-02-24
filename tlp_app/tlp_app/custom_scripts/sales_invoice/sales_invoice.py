@@ -6,4 +6,4 @@ def validate(doc, method = None):
     # Code to validate delivery note assigned for sales invoice items
     for i in doc.items:
         if not i.delivery_note:
-            frappe.throw("Please take item from delivery note.")
+            frappe.throw("Please take items from delivery note.")

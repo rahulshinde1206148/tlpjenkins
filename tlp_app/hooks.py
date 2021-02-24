@@ -89,6 +89,7 @@ doc_events = {
 # 		"on_trash": "method"
 #	}
     "BOM":{
+        "autoname" : "tlp_app.tlp_app.custom_scripts.bom.bom.autoname",
 		"on_submit" : "tlp_app.tlp_app.custom_scripts.bom.bom.on_submit",
 		"on_update_after_submit" : "tlp_app.tlp_app.custom_scripts.bom.bom.on_update_after_submit"
 	},
@@ -101,6 +102,8 @@ doc_events = {
 	"Delivery Note":{
 		"validate" : "tlp_app.tlp_app.custom_scripts.delivery_note.delivery_note.on_submit",
 	},
+	}
+	
 
 }
 
