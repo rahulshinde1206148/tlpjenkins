@@ -95,6 +95,13 @@ doc_events = {
 	},
 	"Purchase Invoice":{
 		"validate" : "tlp_app.tlp_app.custom_scripts.purchase_invoice.purchase_invoice.validate",
+	},
+	"Sales Invoice":{
+		"validate" : "tlp_app.tlp_app.custom_scripts.sales_invoice.sales_invoice.validate",
+	},
+	"Delivery Note":{
+		"validate" : "tlp_app.tlp_app.custom_scripts.delivery_note.delivery_note.on_submit",
+	},
 	}
 	
 
