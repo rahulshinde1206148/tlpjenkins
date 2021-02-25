@@ -1,4 +1,12 @@
 frappe.ui.form.on('Item', {
+	refresh: function(frm){
+		// if(frm.doc.casting_parameter){
+		// 	frm.set_df_property('galvanization_parameter', 'hidden', 1);
+		// }
+		// if(frm.doc.galvanization_parameter){
+		// 	frm.set_df_property('casting_parameter', 'hidden', 1);
+		// }
+	},
 	item_group: function(frm){
 		cur_frm.fields_dict['made_out_of'].get_query = function(doc) {
 			return{

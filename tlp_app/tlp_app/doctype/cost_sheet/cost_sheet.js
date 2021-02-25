@@ -27,11 +27,10 @@ frappe.ui.form.on('Cost Sheet', {
 				}
 			});
         //add items on material cost items
-        var semifinshed = 0;
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
         var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
             $.each(tabletransfer.items, function(index, row){
-            	if (row.is_semifinished == 1){
+            	if (row.is_fastners== 0){
                     var d = frm.add_child("material_cost_items");
 	                d.ri_no = row.item_code;
 	                d.description = row.description;
@@ -51,19 +50,16 @@ frappe.ui.form.on('Cost Sheet', {
 						frm.refresh_fields("material_cost_items");
 					}
 			});
-	                semifinshed = 1;
 	                frm.refresh_field("material_cost_items");
             	}
             });
-            if(semifinshed== 0){
-            		frappe.throw({message:__("None of the items are semifinished from selected asssembly")});
-            }
+           
          });
         //add items on operation or labour items
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
 	        $.each(tabletransfer.items, function(index, row){
-	        	if (row.is_semifinished == 1){
+	        	if (row.is_fastners == 0){
 		            var d = frm.add_child("operation_or_labour_items");
 		            d.ri_no = row.item_code;
 		            d.description = row.description;
@@ -103,7 +99,7 @@ frappe.ui.form.on('Cost Sheet', {
 	            d.ri_no = row.item_code;
 	            d.description = row.description;
 	            d.quantity = row.qty;
-                d.is_semifinished = row.is_semifinished
+                d.is_fastners = row.is_fastners;
                
 	            frappe.call({
 					method: "frappe.client.get",
@@ -149,7 +145,7 @@ var get_ab_8_melting_loss = function(frm) {
 	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
 		var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
         $.each(table.aluminium_bronze, function(index, row){
-        	if (row.parameter == 'AB Alloy (AB) + 8% Melting Loss'){
+        	if ((row.parameter).includes('AB Alloy (AB) +') && (row.parameter).includes('Melting Loss')){
         		ab_8_melting_loss = row.rskg;
         	}
         });	
@@ -221,6 +217,9 @@ var get_operations_data = function(frm) {
 	                   row.miscellaneous = r.message.miscellaneous;
 		        	}
 				}
+				else{
+					frappe.msgprint(__("Please add operation cost on Opearation Cost Setting"))
+				}
 				frm.refresh_fields("operation_or_labour_items");
 			}
 		});
@@ -240,7 +239,6 @@ cur_frm.fields_dict['assembly'].get_query = function(doc) {
 		filters: [
 			['BOM','is_assembly', '=' ,1],
 			['BOM','item', '=' , doc.item_name],
-			['BOM','is_default_assembly', '=' , 1]
 		]
 	}
 };
@@ -296,10 +294,10 @@ frappe.ui.form.on('Cost Working Items', {
 	},
 	set_rate: function(frm, cdt, cdn){
 		var d = locals[cdt][cdn];
-		if (d.is_semifinished == 1){
+		if (d.is_fastners == 0){
            	   
             	if(d.set_rate){
-            		console.log("is_semifinished", d.set_rate)
+            		// console.log("is_semifinished", d.set_rate)
             		frappe.model.set_value(cdt, cdn, "basic_rate", d.set_rate);
             	}
             }
