@@ -102,9 +102,7 @@ doc_events = {
 	"Delivery Note":{
 		"validate" : "tlp_app.tlp_app.custom_scripts.delivery_note.delivery_note.on_submit",
 	},
-	}
 	
-
 }
 
 # Scheduled Tasks
