@@ -1,6 +1,38 @@
 [
  {
   "default_value": null,
+  "doc_type": "Item",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "weight_per_unit",
+  "modified": "2021-01-12 10:48:13.630617",
+  "name": "Item-weight_per_unit-reqd",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "reqd",
+  "property_type": "Check",
+  "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Quotation",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "naming_series",
+  "modified": "2021-02-19 17:47:58.639516",
+  "name": "Quotation-naming_series-options",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "options",
+  "property_type": "Text",
+  "value": "SAL-QTN-.YYYY.-"
+ },
+ {
+  "default_value": null,
   "doc_type": "Delivery Note",
   "docstatus": 0,
   "doctype": "Property Setter",
