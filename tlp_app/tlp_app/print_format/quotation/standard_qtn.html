@@ -112,7 +112,7 @@
 			<tr>
 				<td class="tac" width="5%">{{ row.idx or '' }}</td>
 				<td width="35%">{{ row.description or '' }}</td>
-				<td class="tac" width="10%">{{ row.item_code or ''}}</td>
+				<td class="tac" width="10%">{{row.ri_no or ''}}/{{ row.drawing_no or ''}}</td>
 				<td class="tac" width="10%">{{ hsn_code  or '' }}</td>
 				<td class="tac" width="10%">{{ row.qty or ''}}&nbsp;{{ row.uom or ''}}</td>
 				<td class="tac" width="15%">{{ row.get_formatted('rate') or ''}}</td>
