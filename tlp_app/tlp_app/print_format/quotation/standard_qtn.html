@@ -114,9 +114,22 @@
 				<td width="35%">{{ row.description or '' }}</td>
 				<td class="tac" width="10%">{{row.ri_no or ''}}/{{ row.drawing_no or ''}}</td>
 				<td class="tac" width="10%">{{ hsn_code  or '' }}</td>
-				<td class="tac" width="10%">{{ row.qty or ''}}&nbsp;{{ row.uom or ''}}</td>
-				<td class="tac" width="15%">{{ row.get_formatted('rate') or ''}}</td>
-				<td class="tac" width="15%">{{ row.get_formatted('amount')  or ''}}</td>
+				{% if row.unit_rate == 1 %}
+					<td class="tac" width="10%">Unit Rate</td>
+				{% else %}
+					<td class="tac" width="10%">{{ row.qty or ''}}&nbsp;{{ row.uom or ''}}</td>
+				{% endif %}
+				{% if row.not_quoting == 1 and row.not_manufacturing_by_us == 1 %}
+					<td colspan="2" class="tac" width="10%">Not Quoting <br> Not Manufacturing by Us</td>
+				{% elif row.not_quoting == 1 %}
+					<td colspan="2" class="tac" width="10%">Not Quoting</td>
+				{% elif row.not_manufacturing_by_us == 1 %}
+					<td colspan="2" class="tac" width="10%">Not Manufacturing by Us</td>
+				{% else %}
+					<td class="tac" width="15%">{{ row.get_formatted('rate') or ''}}</td>
+					<td class="tac" width="15%">{{ row.get_formatted('amount')  or ''}}</td>
+				{% endif %}
+		
 			</tr>
 			{% endfor %}
         </table>
