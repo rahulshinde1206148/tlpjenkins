@@ -30,7 +30,7 @@ frappe.ui.form.on('Cost Sheet', {
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
         var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
             $.each(tabletransfer.items, function(index, row){
-            	if (row.is_fastners== 0){
+            	if (row.is_fasteners== 0){
                     var d = frm.add_child("material_cost_items");
 	                d.ri_no = row.item_code;
 	                d.description = row.description;
@@ -59,7 +59,7 @@ frappe.ui.form.on('Cost Sheet', {
         frappe.model.with_doc("BOM", frm.doc.assembly, function() {
 	        var tabletransfer= frappe.model.get_doc("BOM", frm.doc.assembly)
 	        $.each(tabletransfer.items, function(index, row){
-	        	if (row.is_fastners == 0){
+	        	if (row.is_fasteners == 0){
 		            var d = frm.add_child("operation_or_labour_items");
 		            d.ri_no = row.item_code;
 		            d.description = row.description;
@@ -99,7 +99,7 @@ frappe.ui.form.on('Cost Sheet', {
 	            d.ri_no = row.item_code;
 	            d.description = row.description;
 	            d.quantity = row.qty;
-                d.is_fastners = row.is_fastners;
+                d.is_fasteners = row.is_fasteners;
                
 	            frappe.call({
 					method: "frappe.client.get",
@@ -294,7 +294,7 @@ frappe.ui.form.on('Cost Working Items', {
 	},
 	set_rate: function(frm, cdt, cdn){
 		var d = locals[cdt][cdn];
-		if (d.is_fastners == 0){
+		if (d.is_fasteners == 0){
            	   
             	if(d.set_rate){
             		// console.log("is_semifinished", d.set_rate)

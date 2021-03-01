@@ -1,6 +1,5 @@
 frappe.ui.form.on('BOM Items', {
 	item_code: function(frm, cdt, cdn){
-		alert("<<<<<<<<<<<<<<<<<<")
 		var d = locals[cdt][cdn];
 		frappe.call({
 				method: "frappe.client.get_value",
