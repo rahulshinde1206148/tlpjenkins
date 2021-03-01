@@ -14,12 +14,12 @@ def execute(filters=None):
 
 def get_data(filters):
     # print("*************** get_data", get_data)
-    result ,row1, row2, row3, cost_working_list1, cost_working_list2 = [], {}, {},{}, [], []
+    result ,row1 , final_result = [], {}, []
 
     cost_sheet_list = [i['name'] for i in frappe.get_list("Cost Sheet","name",{"docstatus":1})]
     print("_________________ cost_sheet_list",cost_sheet_list)
     for cost_sheet in cost_sheet_list:
-        # print("??????????? cost_sheet", cost_sheet)
+        print("??????????? cost_sheet", cost_sheet)
         cost_sheet_item = frappe.db.sql("""SELECT ri_no, description, basic_rate, cost_rate 
             from `tabCostsheet Item` where parent='{0}'""".format(cost_sheet), as_dict=1) 
         row1 = cost_sheet_item[0]
@@ -44,7 +44,15 @@ def get_data(filters):
                 if cost_working.get('labour_cost') == 0.0:
                     result.append(cost_working)
                     # print("$$$$$$$$$$$$$$ cost_working", cost_working)
-        # print("^^^^^^^^^^^^^^^^^ result", result)
+        columns = [i['fieldname'] for i in get_columns()]
+        print("$$$$$$$$$$$ columns", columns)    
+        blank_row = { k:[] for k in columns }
+        del blank_row['quantity']
+        result.append(blank_row)
+    print("@@@@############ result", result)
+
+    
+    # final_result.append(result)
     return result
 
 def get_columns():
@@ -103,6 +111,18 @@ def get_columns():
            "fieldname": "bending",
            "fieldtype": "Currency",
            "label": "Bending",
+           "width": 60
+        },
+        {
+           "fieldname": "casting",
+           "fieldtype": "Currency",
+           "label": "Casting",
+           "width": 60
+        },
+        {
+           "fieldname": "galvanization",
+           "fieldtype": "Currency",
+           "label": "Galvanization",
            "width": 60
         },
         {
@@ -229,26 +249,78 @@ def get_parameter_data(parameter_group):
 
 
 @frappe.whitelist() 
-def get_updated_parameter_data(changed_arg, previous_arg):
+def get_updated_parameter_data(changed_arg, previous_arg, report_columns, report_data):
   # print("????????????????before json changed_arg",type(changed_arg), changed_arg, "previous_arg", type(previous_arg),previous_arg)
   import json
   changed_arg = json.loads(changed_arg)
   previous_cost_list = json.loads(previous_arg)
-  print("????????????????after json changed_arg", type(changed_arg),changed_arg, "previous_arg",type(previous_arg), previous_arg)
   parameter_group = changed_arg.get('parameter_for_updating_cost')
   changed_cost_list = changed_arg.get('cost_of_parameters')
-  # previous_cost_list = previous_arg.get('cost_of_parameters')
   print("????????????????list ", type(changed_cost_list),changed_cost_list, "previous_cost_list",type(previous_cost_list), previous_arg)
-  # diff = [i for i in changed_cost_list if i not in previous_cost_list]
-  # changed_set = set(changed_arg.items())
-  # previous_set = set(previous_arg.items())
-  # diff = previous_set - changed_set
+  previous_cost_data, changed_cost_data = [], []
   for previous in previous_cost_list:
     for changed in changed_cost_list:
       if previous.get('parameter') == changed.get('parameter') and previous.get('cost') != changed.get('cost'):
-        print("############ previous", previous)
-        print("############ changed",changed)
+        previous_cost = { previous.get('parameter'): previous }
+        changed_cost = { changed.get('parameter'):changed } 
+        previous_cost_data.append(previous)
+        changed_cost_data.append(changed)
+  print("############ previous", previous_cost_data)
+  
+  print("############ changed",changed_cost_data)
+  # for data in report_data:
+  report_data = json.loads(report_data)
+  # print("/////report_data", report_data, type(report_data))
+  cost_sheet_item_list = []
+  cost_sheet_item = []
+  for data in report_data:
+    if data.get('ri_no')== []:
+      cost_sheet_item_list.append(cost_sheet_item)
+      cost_sheet_item = []
+    else:
+      cost_sheet_item.append(data)
+      # print("########## data", data)
+  cost_sheet_dict_of_list = []
+  for cost_sheet_item in cost_sheet_item_list:
+    # print("!!!!!!!!!!! cost_sheet_item", cost_sheet_item)
+    cost_sheet_item_dict, operation_item_list, fasteners_list = {}, [], []
+    for item in cost_sheet_item:
+      if 'quantity' not in item.keys():
+        # print("############### if item", item)
+        cost_sheet_item_dict['cost_sheet_item'] = item
+      elif 'galvanization' in item.keys():
+        # print("@@@@@@@@@@@@@@@ elif item", item)
+        operation_item_list.append(item)
+        # operation_item =
+      else:
+        # print("!!!!!!!!!!!!!!!!else item", item)
+        fasteners_list.append(item)
+    # print("222222222222222 operation_item_list", operation_item_list)
+    cost_sheet_item_dict['operation_item'] = operation_item_list
+    cost_sheet_item_dict['fasteners'] = fasteners_list
+    get_opeartions_cost(cost_sheet_item_dict['operation_item'], changed_cost_data) 
+    cost_sheet_dict_of_list.append(cost_sheet_item_dict)
 
-  # print("############ diff", diff)
+    
+    
+  print("333333333333333 cost_sheet_dict_of_list",cost_sheet_dict_of_list )
+
+def get_opeartions_cost(operation_items, changed_cost_data):
+  for changed_cost in changed_cost_data:
+    print("//////////// changed_cost", changed_cost)
+    for oper_item in operation_items:
+      print("??????????? oper_item", oper_item)
+      item_data = frappe.db.sql(""" SELECT galvanization_parameter, finished_weight, weight_per_unit, casting_parameter 
+                                    FROM `tabItem` WHERE name='{0}'""".format(oper_item.get('ri_no')), as_dict=1)
+      print("??????????? item_data", item_data)
+      if oper_item.get('galvanization'):
+        if item_data[0].get('galvanization_parameter') == changed_cost.get('parameter'):
+          oper_item['galvanization'] = changed_cost.get('cost') * item_data[0].get('finished_weight')
+          print("//////////////oper_item['galvanization'] ", oper_item['galvanization'])
+      if oper_item.get('casting'):
+        if item_data[0].get('casting_parameter') == changed_cost.get('parameter'):
+          oper_item['casting'] = changed_cost.get('cost') * item_data[0].get('finished_weight')
+          print("//////////////oper_item['casting'] ", oper_item['casting'])
+
 
 
