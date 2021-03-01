@@ -28,6 +28,29 @@ frappe.ui.form.on("Quotation", {
 				}
 			});
 		}
-	}
-	
+	},
+	refresh(frm) {
+		frm.fields_dict["items"].grid.add_custom_button(__('Add Assembly'), 
+		function() {
+			var d = new frappe.ui.Dialog({
+						'fields': [
+							{'fieldname': 'ht', 'fieldtype': 'HTML'},
+							{'fieldname': 'select_item',
+							 'fieldtype': 'Link',
+							 "options":  "Item",
+							 "get_query": function () {
+									return {
+										filters: [['Item', 'is_costsheet','=', 1]]
+										}
+								}}
+						],
+						primary_action: function(){
+							d.hide();
+							show_alert(d.get_values());
+						}
+					});
+					d.fields_dict.ht.$wrapper.html('Select Item');
+					d.show();
+				})}
 });
+
