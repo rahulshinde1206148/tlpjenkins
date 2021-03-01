@@ -306,9 +306,10 @@ def get_updated_parameter_data(changed_arg, previous_arg, report_columns, report
   print("333333333333333 cost_sheet_dict_of_list",cost_sheet_dict_of_list )
 
 def get_opeartions_cost(operation_items, changed_cost_data):
-  for changed_cost in changed_cost_data:
-    print("//////////// changed_cost", changed_cost)
-    for oper_item in operation_items:
+  for oper_item in operation_items:
+    for changed_cost in changed_cost_data:
+      print("//////////// changed_cost", changed_cost)
+    
       print("??????????? oper_item", oper_item)
       item_data = frappe.db.sql(""" SELECT galvanization_parameter, finished_weight, weight_per_unit, casting_parameter 
                                     FROM `tabItem` WHERE name='{0}'""".format(oper_item.get('ri_no')), as_dict=1)
