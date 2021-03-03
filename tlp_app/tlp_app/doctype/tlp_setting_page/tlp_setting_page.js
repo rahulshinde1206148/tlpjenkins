@@ -19,7 +19,7 @@ frappe.ui.form.on('TLP Setting Page', {
                  row.rskg = ab_alloy * ((100+ row.percent)/100)
                  frm.save()
                  var df = frappe.meta.get_docfield("Aluminium Bronze","rskg",  cur_frm.doc.name);
-                df.read_only = 1;
+				 df.read_only = 1;
 		 	}
 		});
 		if(frm.doc.labour_factor){
@@ -32,4 +32,38 @@ frappe.ui.form.on('TLP Setting Page', {
 		}
 	}
 
+});
+// On Click event On percent of Aluminium Bronze
+frappe.ui.form.on('Aluminium Bronze', {
+	percent: function(frm, cdt, cdn){
+		var d = locals[cdt][cdn];
+		if((d.parameter).includes('AB Alloy (AB) +') && (d.parameter).includes('Melting Loss')){
+			var para = 'AB Alloy (AB) +' + d.percent.toString() + '% ' + 'Melting Loss'
+			frappe.db.exists("Parameters", para).then(
+					function(value) {
+					if (value){
+						frappe.model.set_value(cdt, cdn, "parameter", para);
+					}
+					else {
+						frappe.db.insert({"doctype": "Parameters", "parameter":para});
+						frappe.model.set_value(cdt, cdn, "parameter", para);
+					}})
+	}},
+});
+// On Click event On percent of Aluminium
+frappe.ui.form.on('Aluminium', {
+	percent: function(frm, cdt, cdn){
+		var d = locals[cdt][cdn];
+		if((d.parameter).includes('Aluminium(LM6) +') && (d.parameter).includes('Melting Loss')){
+			var para = 'Aluminium(LM6) +' + d.percent.toString() + '% ' + 'Melting Loss'
+			frappe.db.exists("Parameters", para).then(
+				function(value) {
+				if (value){
+					frappe.model.set_value(cdt, cdn, "parameter", para);
+				}
+				else {
+					frappe.db.insert({"doctype": "Parameters", "parameter":para});
+					frappe.model.set_value(cdt, cdn, "parameter", para);
+				}})
+	}},
 });

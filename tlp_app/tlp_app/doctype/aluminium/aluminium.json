@@ -7,6 +7,7 @@
  "field_order": [
   "parameter",
   "rskg",
+  "percent",
   "remarks"
  ],
  "fields": [
@@ -29,10 +30,16 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Remarks"
+  },
+  {
+   "fieldname": "percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Percent"
   }
  ],
  "istable": 1,
- "modified": "2021-01-19 15:38:14.267557",
+ "modified": "2021-03-03 10:44:38.461631",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Aluminium",
