@@ -140,10 +140,12 @@
 				For TRANSMISSION LINE PRODUCTS 
 				<br><br><br>
 				{% if doc.siganture_user %}
+				{% set employee_signature = frappe.db.get_value("Employee",{'name':doc.siganture_user},"employee_signature") %}
 				{% set employee_name = frappe.db.get_value("Employee",{'name':doc.siganture_user},"employee_name") %}
 				{% set designation = frappe.db.get_value("Employee",{'name':doc.siganture_user},"designation") %}
-				 <p class="sign">{% if employee_name %} {{ employee_name }} {% endif %}</p><p class="sign">
-				 {% if designation %} {{ designation }} {% endif %}</p>
+				<p class="sign">{% if employee_signature %} <img src="{{ employee_signature }}" width="120" height="90" /> {% endif %}</img></p>
+				<p class="sign">{% if employee_name %} {{ employee_name }} {% endif %}</p>
+				<p class="sign">{% if designation %} {{ designation }} {% endif %}</p>
                 {% endif %}
 			</div>
         </div>
