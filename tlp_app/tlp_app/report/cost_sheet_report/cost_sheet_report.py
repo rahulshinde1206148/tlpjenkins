@@ -314,6 +314,8 @@ def get_opeartions_cost(operation_items, changed_cost_data):
       item_data = frappe.db.sql(""" SELECT galvanization_parameter, finished_weight, weight_per_unit, casting_parameter 
                                     FROM `tabItem` WHERE name='{0}'""".format(oper_item.get('ri_no')), as_dict=1)
       print("??????????? item_data", item_data)
+      
+      if changed_cost.get('parameter') 
       if oper_item.get('galvanization'):
         if item_data[0].get('galvanization_parameter') == changed_cost.get('parameter'):
           oper_item['galvanization'] = changed_cost.get('cost') * item_data[0].get('finished_weight')
