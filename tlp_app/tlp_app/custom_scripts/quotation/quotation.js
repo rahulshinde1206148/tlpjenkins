@@ -34,7 +34,6 @@ frappe.ui.form.on("Quotation", {
 		frm.fields_dict["items"].grid.add_custom_button(__('Add Assembly'), function() {
 		var d = new frappe.ui.Dialog({
 			'fields': [
-				// {'fieldname': 'ht', 'fieldtype': 'HTML'},
 				{'fieldname': 'select_item',
 				 'fieldtype': 'Link',
 				 "options":  "Item",
@@ -46,13 +45,10 @@ frappe.ui.form.on("Quotation", {
 				    },
 				}
 				],
-				
 			});
 		   d.set_primary_action(__('Get Data'), function() {
 		   	var data = d.get_values();
 		   	this.data = [];
-		   
-		   	// console.log("/////////////data.select_item ",data.select_item)
 		   	frappe.call({
 				method: "frappe.client.get",
 				args:{
@@ -61,9 +57,7 @@ frappe.ui.form.on("Quotation", {
 				},
 				callback:function(r) {
 					if(r){
-						// console.log("??????????r ",r)
-					item_name = r.message.description
-					// console.log("///////item_name", item_name)
+						item_name = r.message.description
 					}
 				}
 			});
@@ -91,7 +85,7 @@ frappe.ui.form.on("Quotation", {
                             	$('[data-fieldname="cost_sheet_items"]').find('input:checkbox').prop('checked', true);
 							}
 							else{
-								$('[data-fieldname="cost_sheet_items"]').find('input:checkbox').prop('checked', false);	
+								$('.grid-row').find('input:checkbox').prop('checked', false);	
 							}
 						}
 					},
@@ -105,10 +99,8 @@ frappe.ui.form.on("Quotation", {
 						change: function() {
 							var data = inner_dialog.get_values();
 							if(data.wo_fastener == 1){
-							// 	console.log("///////////data", data)
 								$.each(data.cost_sheet_items, function(index, row){
 								    if(row.is_fasteners == 0){
-								     	console.log("@@@@@@@ row", row)
 								     	$('[data-fieldname="cost_sheet_items"]').find('input:checkbox').prop('checked', true);
 								    }
 								});
@@ -128,19 +120,13 @@ frappe.ui.form.on("Quotation", {
 						},
 						fields: [
 							{
-								fieldtype:'Check',
-								fieldname:"sr_no",
-								// in_place_edit: true,
-								in_list_view: 1,
-								label: __('Sr No'),
-							},
-							{
 								fieldtype:'Link',
 								fieldname:"ri_no",
 								options: 'Item',
 								in_list_view: 1,
 								label: __('RI No'),
-								columns:1
+								columns:1,
+								"read_only":1,
 							
 							},
 							{
@@ -148,7 +134,8 @@ frappe.ui.form.on("Quotation", {
 								fieldname:"description",
 								in_list_view: 1,
 								label: __('Description'),
-								columns : 1
+								columns : 1,
+								"read_only":1,
 							},
 							{
 								fieldtype:'Link',
@@ -156,7 +143,8 @@ frappe.ui.form.on("Quotation", {
 								options: 'Made Out Of',
 								in_list_view: 1,
 								label: __('Material Type'),
-								columns : 1
+								columns : 1,
+								"read_only":1,
 							},
 							
 							{
@@ -164,7 +152,8 @@ frappe.ui.form.on("Quotation", {
 								fieldname:"qty",
 								in_list_view: 1,
 								label: __('Quantity'),
-								columns : 1
+								columns : 1,
+								"read_only":1,
 							},
 
 							{
@@ -172,55 +161,63 @@ frappe.ui.form.on("Quotation", {
 								fieldname:"set_rate",
 								in_list_view: 1,
 								label: __('Set Rate'),
-								columns : 1
+								columns : 1,
+								"read_only":1,
 							},
 							{
 								fieldtype:'Currency',
 								fieldname:"basic_rate",
 								in_list_view: 1,
 								label: __('Basic Rate'),
-								columns : 1
+								columns : 1,
+								"read_only":1,
 							},
 							{
 								fieldtype:'Currency',
 								fieldname:"cost_rate",
 								in_list_view: 1,
 								label: __('Cost Rate'),
-								columns : 1
+								columns : 1,
+								"read_only":1,
 							},
+							{fieldtype:"Column Break"},
 							{
 								fieldtype:'Percent',
 								fieldname:"margin_percent1",
-								in_list_view: 1,
 								label: __('Margin 1 (%)'),
-								columns : 1
+								"read_only":1,
+								in_list_view: 1,
 							},
 							{
 								fieldtype:'Currency',
 								fieldname:"price1",
-								in_list_view: 1,
 								label: __('Price for Margin 1'),
+								"read_only":1,
+								in_list_view: 1,
 								columns : 1
 							},
 							{
 								fieldtype:'Percent',
 								fieldname:"margin_percent2",
-								in_list_view: 1,
 								label: __('Margin 2(%)'),
-								columns : 1
+								"read_only":1,
+								in_list_view: 1,
+                                columns : 1
 							},
 							{
 								fieldtype:'Currency',
 								fieldname:"price2",
 								in_list_view: 1,
 								label: __('Price for Margin 2'),
+								"read_only":1,
 								columns : 1
 							},
 							{
 								fieldtype:'Percent',
 								fieldname:"margin_percent3",
-								in_list_view: 1,
 								label: __('Margin 3(%)'),
+								"read_only":1,
+								in_list_view: 1,
 								columns : 1
 							},
 							{
@@ -228,6 +225,7 @@ frappe.ui.form.on("Quotation", {
 								fieldname:"price3",
 								in_list_view: 1,
 								label: __('Price for Margin 3'),
+								"read_only":1,
 								columns : 1
 							},
 							{
@@ -235,6 +233,7 @@ frappe.ui.form.on("Quotation", {
 								fieldname:"comp_rt_min",
 								in_list_view: 1,
 								label: __('Comp. Rt.(Min)'),
+								"read_only":1,
 								columns : 1
 							},
 							{
@@ -242,19 +241,28 @@ frappe.ui.form.on("Quotation", {
 								fieldname:"comp_rt_max",
 								in_list_view: 1,
 								label: __('Comp. Rt.(Max)'),
-								columns : 1
+								columns : 1,
+								"read_only":1,
 							},
 							{
 								fieldtype:'Check',
 								fieldname:"is_fasteners",
 								label: __('Is Fasteners'),
-								
+								"read_only":1,
 							},
 							{
 								fieldtype:'Button',
-								fieldname:"hash"
-								// label: __('Is Fasteners'),
-								
+								fieldname:"hash",
+								in_list_view: 1,
+								label: __('#'),
+								columns : 1
+							},
+							{
+								fieldtype:'Button',
+								fieldname:"aero",
+								in_list_view: 1,
+								label: __('->'),
+								columns : 1
 							},
 							
 							
@@ -281,9 +289,7 @@ frappe.ui.form.on("Quotation", {
 					},
 					callback: function(r) {
 						if (r.message){ 
-							// console.log("///////////// r.message", r.message)
 							const cost_sheet_data = r.message
-                            // previous_arg = parameter_data
 							cost_sheet_data.forEach(d => {
 			        			inner_dialog.fields_dict.cost_sheet_items.df.data.push({
 									"ri_no": d.ri_no,
@@ -301,9 +307,7 @@ frappe.ui.form.on("Quotation", {
 									"price3": d.amount_of_percent_3,
 									"comp_rt_min": d.comp_min_rate,
 									"comp_rt_max": d.comp_max_rate,
-                                    "is_fasteners": d.is_fasteners,
-                                    "sr_no":0,
-                                    "hash": '#'
+                                    "is_fasteners": d.is_fasteners
 								});
 							})
 							this.data = inner_dialog.fields_dict.cost_sheet_items.df.data;
