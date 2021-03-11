@@ -53,6 +53,12 @@ frappe.query_reports["Cost Sheet Report"] = {
 									in_place_edit: true,
 									in_list_view: 1,
 									label: __('Cost'),
+								},
+								{
+									fieldtype:'Percent',
+									fieldname:"percent",
+									label: __('Percent'),
+									"hidden":1,
 								}
 							]
 						},
@@ -69,10 +75,12 @@ frappe.query_reports["Cost Sheet Report"] = {
 						if (r.message){ 
 							const parameter_data = r.message
                             previous_arg = parameter_data
+                            console.log("??????? parameter_data", parameter_data)
 							parameter_data.forEach(d => {
 			        			dialog.fields_dict.cost_of_parameters.df.data.push({
 									"parameter": d.parameter,
-									"cost": d.cost
+									"cost": d.cost,
+									"percent":d.percent
 								});
 							})
 							this.data = dialog.fields_dict.cost_of_parameters.df.data;
@@ -82,6 +90,16 @@ frappe.query_reports["Cost Sheet Report"] = {
 				});
 				dialog.set_primary_action(__('Set'), function() {
 					changed_arg = dialog.get_values()
+					changed_parameter_data = changed_arg.cost_of_parameters
+					changed_parameter_data.forEach(d => {
+	        			dialog.fields_dict.cost_of_parameters.df.data.push({
+							"parameter": d.parameter,
+							"cost": d.cost
+						});
+					})
+					this.data = dialog.fields_dict.cost_of_parameters.df.data;
+					dialog.fields_dict.cost_of_parameters.grid.refresh();
+					console.log("////// chnaged arg", changed_arg.cost_of_parameters)
 					dialog.hide();
 
 
@@ -113,6 +131,7 @@ frappe.query_reports["Cost Sheet Report"] = {
 				},
 				callback: function(r) {
 					if (r.message){ 
+						console.log("/////// r.message", r.message)
 	        		}
 				}
 			});
