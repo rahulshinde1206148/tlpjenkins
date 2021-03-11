@@ -255,7 +255,23 @@ frappe.ui.form.on("Quotation", {
 								fieldname:"hash",
 								in_list_view: 1,
 								label: __('#'),
-								columns : 1
+								columns : 1,
+								click: function(){
+									var data = inner_dialog.get_values();
+									console.log("DDDDDDDDDDDDD",inner_dialog.$wrapper.find('.modal-dialog').find('.col col-xs-1'))
+									console.log("/////////data", data)
+				              		frappe.call({
+										method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_competitor_data',
+										freeze: true,
+										args: {"data":data},
+										callback: function(r) {
+											if(r.message){
+												// dialog.hide();
+												// window.location.reload()
+											}
+										}
+									});
+				              	}
 							},
 							{
 								fieldtype:'Button',
@@ -273,48 +289,47 @@ frappe.ui.form.on("Quotation", {
 						fieldtype:'Button',
 						fieldname:"add_selected_assembly",
 						label: __('Add Selected Assembly'),
+
+						
 					}
-
-
 				]
             });
 
             var data = inner_dialog.get_values();
-            // console.log("///////////data", data)
-				frappe.call({
-					method: "tlp_app.tlp_app.custom_scripts.quotation.quotation.get_cost_sheet_and_comp_data",
-					freeze: true,
-					args: {
-						cost_sheet_item: data.selected_item
-					},
-					callback: function(r) {
-						if (r.message){ 
-							const cost_sheet_data = r.message
-							cost_sheet_data.forEach(d => {
-			        			inner_dialog.fields_dict.cost_sheet_items.df.data.push({
-									"ri_no": d.ri_no,
-									"description": d.description,
-									"material_type": d.material_type,
-									"qty": d.quantity,
-									"set_rate": d.set_rate,
-									"basic_rate": d.basic_rate,
-									"cost_rate": d.cost_rate,
-									"margin_percent1": d.percent_1,
-									"margin_percent2": d.percent_2,
-									"margin_percent3": d.percent_3,
-									"price1": d.amount_of_percent_1,
-									"price2": d.amount_of_percent_2,
-									"price3": d.amount_of_percent_3,
-									"comp_rt_min": d.comp_min_rate,
-									"comp_rt_max": d.comp_max_rate,
-                                    "is_fasteners": d.is_fasteners
-								});
-							})
-							this.data = inner_dialog.fields_dict.cost_sheet_items.df.data;
-							inner_dialog.fields_dict.cost_sheet_items.grid.refresh();
-		        		}
-					}
-				});
+			frappe.call({
+				method: "tlp_app.tlp_app.custom_scripts.quotation.quotation.get_cost_sheet_and_comp_data",
+				freeze: true,
+				args: {
+					cost_sheet_item: data.selected_item
+				},
+				callback: function(r) {
+					if (r.message){ 
+						const cost_sheet_data = r.message
+						cost_sheet_data.forEach(d => {
+		        			inner_dialog.fields_dict.cost_sheet_items.df.data.push({
+								"ri_no": d.ri_no,
+								"description": d.description,
+								"material_type": d.material_type,
+								"qty": d.quantity,
+								"set_rate": d.set_rate,
+								"basic_rate": d.basic_rate,
+								"cost_rate": d.cost_rate,
+								"margin_percent1": d.percent_1,
+								"margin_percent2": d.percent_2,
+								"margin_percent3": d.percent_3,
+								"price1": d.amount_of_percent_1,
+								"price2": d.amount_of_percent_2,
+								"price3": d.amount_of_percent_3,
+								"comp_rt_min": d.comp_min_rate,
+								"comp_rt_max": d.comp_max_rate,
+                                "is_fasteners": d.is_fasteners
+							});
+						})
+						this.data = inner_dialog.fields_dict.cost_sheet_items.df.data;
+						inner_dialog.fields_dict.cost_sheet_items.grid.refresh();
+	        		}
+				}
+			});
 			inner_dialog.set_primary_action(__('Get Items'), function() {
 					dialog_data = inner_dialog.get_values()
 					// dialog.hide();
