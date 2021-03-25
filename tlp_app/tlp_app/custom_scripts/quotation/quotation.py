@@ -34,3 +34,7 @@ def get_cost_sheet_and_comp_data(cost_sheet_item):
 			item['comp_max_rate']: comp_max_rate[0]['max(rate)']
 	return cost_sheet_data
 		
+@frappe.whitelist()
+def get_competitor_data(data):
+	print("################ data", data)
+	

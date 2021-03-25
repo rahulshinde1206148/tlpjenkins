@@ -17,9 +17,9 @@ def get_data(filters):
     result ,row1 , final_result = [], {}, []
 
     cost_sheet_list = [i['name'] for i in frappe.get_list("Cost Sheet","name",{"docstatus":1})]
-    print("_________________ cost_sheet_list",cost_sheet_list)
+    # print("_________________ cost_sheet_list",cost_sheet_list)
     for cost_sheet in cost_sheet_list:
-        print("??????????? cost_sheet", cost_sheet)
+        # print("??????????? cost_sheet", cost_sheet)
         cost_sheet_item = frappe.db.sql("""SELECT ri_no, description, basic_rate, cost_rate 
             from `tabCostsheet Item` where parent='{0}'""".format(cost_sheet), as_dict=1) 
         row1 = cost_sheet_item[0]
@@ -45,11 +45,11 @@ def get_data(filters):
                     result.append(cost_working)
                     # print("$$$$$$$$$$$$$$ cost_working", cost_working)
         columns = [i['fieldname'] for i in get_columns()]
-        print("$$$$$$$$$$$ columns", columns)    
+        # print("$$$$$$$$$$$ columns", columns)    
         blank_row = { k:[] for k in columns }
         del blank_row['quantity']
         result.append(blank_row)
-    print("@@@@############ result", result)
+    # print("@@@@############ result", result)
 
     
     # final_result.append(result)
@@ -234,11 +234,11 @@ def get_parameter_data(parameter_group):
     tlp_setting_doc = frappe.get_doc("TLP Setting Page","TLP-Setting-00001")
     for p in tlp_setting_doc.aluminium_bronze:
       if parameter == p.parameter:
-        parameter_dict = {'parameter':parameter, 'cost':p.rskg }
+        parameter_dict = {'parameter':parameter, 'cost':p.rskg, 'percent':p.percent }
         parameter_data.append(parameter_dict)
     for p in tlp_setting_doc.aluminium:
       if parameter == p.parameter:
-        parameter_dict = {'parameter':parameter, 'cost':p.rskg }
+        parameter_dict = {'parameter':parameter, 'cost':p.rskg, 'percent':p.percent }
         parameter_data.append(parameter_dict)
     for p in tlp_setting_doc.ferrous:
       if parameter == p.parameter:
@@ -256,7 +256,7 @@ def get_updated_parameter_data(changed_arg, previous_arg, report_columns, report
   previous_cost_list = json.loads(previous_arg)
   parameter_group = changed_arg.get('parameter_for_updating_cost')
   changed_cost_list = changed_arg.get('cost_of_parameters')
-  print("????????????????list ", type(changed_cost_list),changed_cost_list, "previous_cost_list",type(previous_cost_list), previous_arg)
+  # print("????????????????list ", type(changed_cost_list),changed_cost_list, "previous_cost_list",type(previous_cost_list), previous_arg)
   previous_cost_data, changed_cost_data = [], []
   for previous in previous_cost_list:
     for changed in changed_cost_list:
@@ -265,12 +265,14 @@ def get_updated_parameter_data(changed_arg, previous_arg, report_columns, report
         changed_cost = { changed.get('parameter'):changed } 
         previous_cost_data.append(previous)
         changed_cost_data.append(changed)
-  print("############ previous", previous_cost_data)
+  # print("############ previous", previous_cost_data)
   
-  print("############ changed",changed_cost_data)
+  # print("############ changed",changed_cost_data)
   # for data in report_data:
+ 
+
+  # for blank row in report 
   report_data = json.loads(report_data)
-  # print("/////report_data", report_data, type(report_data))
   cost_sheet_item_list = []
   cost_sheet_item = []
   for data in report_data:
@@ -298,32 +300,71 @@ def get_updated_parameter_data(changed_arg, previous_arg, report_columns, report
     # print("222222222222222 operation_item_list", operation_item_list)
     cost_sheet_item_dict['operation_item'] = operation_item_list
     cost_sheet_item_dict['fasteners'] = fasteners_list
-    get_opeartions_cost(cost_sheet_item_dict['operation_item'], changed_cost_data) 
+    cost_sheet_item_dict['operation_item'] = get_opeartions_cost(operation_item_list, changed_cost_data) 
     cost_sheet_dict_of_list.append(cost_sheet_item_dict)
-
-    
-    
-  print("333333333333333 cost_sheet_dict_of_list",cost_sheet_dict_of_list )
+  # print("333333333333333 cost_sheet_dict_of_list",cost_sheet_dict_of_list )
+  return cost_sheet_dict_of_list
 
 def get_opeartions_cost(operation_items, changed_cost_data):
   for oper_item in operation_items:
     for changed_cost in changed_cost_data:
-      print("//////////// changed_cost", changed_cost)
+      # print("//////////// changed_cost", changed_cost)
     
       print("??????????? oper_item", oper_item)
       item_data = frappe.db.sql(""" SELECT galvanization_parameter, finished_weight, weight_per_unit, casting_parameter 
                                     FROM `tabItem` WHERE name='{0}'""".format(oper_item.get('ri_no')), as_dict=1)
-      print("??????????? item_data", item_data)
+      # print("??????????? item_data", item_data)
       
-      if changed_cost.get('parameter') 
+      # if changed_cost.get('parameter'):
       if oper_item.get('galvanization'):
         if item_data[0].get('galvanization_parameter') == changed_cost.get('parameter'):
           oper_item['galvanization'] = changed_cost.get('cost') * item_data[0].get('finished_weight')
-          print("//////////////oper_item['galvanization'] ", oper_item['galvanization'])
+          # print("//////////////oper_item['galvanization'] ", oper_item['galvanization'])
       if oper_item.get('casting'):
         if item_data[0].get('casting_parameter') == changed_cost.get('parameter'):
-          oper_item['casting'] = changed_cost.get('cost') * item_data[0].get('finished_weight')
-          print("//////////////oper_item['casting'] ", oper_item['casting'])
+          oper_item['casting'] = changed_cost.get('cost') * item_data[0].get('weight_per_unit')
+          # print("//////////////oper_item['casting'] ", oper_item['casting'])
+  operation_items = get_cost_data(operation_items)
+  # print("############# operation_items", operation_items)
+  return operation_items
 
-
-
+def get_cost_data(operation_items):
+  for oper_item in operation_items:
+    sum_of_operations = 0.0
+    if oper_item['drilling'] :
+        sum_of_operations += float(oper_item['drilling']) 
+    if oper_item['bending'] :
+        sum_of_operations += float(oper_item['bending']) 
+    if oper_item['casting'] :
+        sum_of_operations += float(oper_item['casting']) 
+    if oper_item['maching'] :
+        sum_of_operations += float(oper_item['maching']) 
+    if oper_item['welding'] :
+        sum_of_operations += float(oper_item['welding']) 
+    if oper_item['forging'] :
+        sum_of_operations += float(oper_item['forging']) 
+    if oper_item['file']:
+        sum_of_operations += float(oper_item['file']) 
+    if oper_item['die'] :
+        sum_of_operations += float(oper_item['die']) 
+    if oper_item['galvanization'] :
+        sum_of_operations += float(oper_item['galvanization']) 
+    if oper_item['miscellaneous'] :
+        sum_of_operations += float(oper_item['miscellaneous']) 
+    tlp_setting_doc = frappe.get_doc("TLP Setting Page","TLP-Setting-00001")
+    if tlp_setting_doc.labour_factor :
+        labour_factor= frappe.db.get_value("TLP Setting Page", {'name':"TLP-Setting-00001"}, 'labour_factor')
+    oper_item['labour_cost'] = sum_of_operations * labour_factor
+    oper_item['piece_rate'] = oper_item['material_cost'] + oper_item['labour_cost']
+    oper_item['set_rate'] = oper_item['piece_rate'] * oper_item['quantity']
+    oper_item['basic_rate'] = oper_item['set_rate'] 
+    if tlp_setting_doc.cost_on_overheads:
+      oper_item['cost_rate'] = (oper_item['basic_rate'] * tlp_setting_doc.cost_on_overheads)/100 + oper_item['basic_rate']
+   
+  print("#############555 operation_items", operation_items)   
+# things pending
+ # calculate amount of percent 1 , 2, 3 as per percent 1,2,3 
+ # return operation items on above function 
+ # return cost_sheet_dict_of_list to js file 
+ # set changed data on report.
+  
