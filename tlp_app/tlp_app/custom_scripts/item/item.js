@@ -39,5 +39,24 @@ frappe.ui.form.on('Item', {
 				}
 			};
 		}
-	}
+	},
+	// Toggling Between Casting and Galvanization Parameter
+	casting_parameter: function(frm){
+		if(frm.doc.casting_parameter){
+			console.log(frm.doc.casting_parameter)
+			frm.toggle_display("galvanization_parameter", false);
+		}
+		else{
+			frm.toggle_display("galvanization_parameter", true);
+		}
+	},
+	galvanization_parameter: function(frm){
+		if(frm.doc.galvanization_parameter){
+			console.log(frm.doc.casting_parameter)
+			frm.toggle_display("casting_parameter", false);
+		}
+		else{
+			frm.toggle_display("casting_parameter", true);
+		}
+	},
 });
