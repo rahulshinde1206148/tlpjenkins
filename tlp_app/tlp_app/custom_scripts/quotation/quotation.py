@@ -36,5 +36,42 @@ def get_cost_sheet_and_comp_data(cost_sheet_item):
 		
 @frappe.whitelist()
 def get_competitor_data(data):
-	print("################ data", data)
+	import json
+	print("################ data shubhangi", data)
+	print("########## testing selected item", type(data))
+	res = json.loads(data)
+	print("json",res['selected_item'])
+	print("type of json", type(res))
+	material_ri_no = res['selected_item']
+	data = frappe.db.sql("""SELECT item_code, item_name, competitor_name, 
+	 order_number, order_date, ordered_quantity, rate, amount  from `tabCompetitor Rate` 
+	 where item_code='{0}'""".format(int(material_ri_no)), as_dict=1)
+	print("compitetor rate&&&&&&", data)
+	return data
+
+@frappe.whitelist()
+def get_material_data(data):
+	import json
+	print("################ data shubhangi", data)
+	print("########## testing selected item", type(data))
+	res = json.loads(data)
+	print("json",res['selected_item'])
+	print("type of json", type(res))
+	material_ri_no = res['selected_item']
+	print((material_ri_no))
+	data = frappe.db.sql("""SELECT ri_no, drilling, bending, Machining, Welding, 
+	 forging, file, die, miscellaneous from `tabOpearation Cost Setting` 
+	 where ri_no='{0}'""".format(int(material_ri_no)), as_dict=1)
+	print("material data...........",data)
+	return data
+	
+@frappe.whitelist()
+def get_set_qty(data):
+	import json
+	print("################ data shubhangi", data)
+	print("########## testing selected item", type(data))
+	res = json.loads(data)
+	print("json",res['selected_item'])
+	print("type of json", type(res))
+	return "data"
 	
