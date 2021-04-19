@@ -1598,5 +1598,37 @@
   "property": "print_hide",
   "property_type": "Check",
   "value": "0"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Costsheet Item",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "complete",
+  "modified": "2021-04-15 12:34:33.285438",
+  "name": "Costsheet Item-complete-in_list_view",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "in_list_view",
+  "property_type": "Check",
+  "value": "0"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Costsheet Item",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "without",
+  "modified": "2021-04-15 12:34:33.511874",
+  "name": "Costsheet Item-without-in_list_view",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "in_list_view",
+  "property_type": "Check",
+  "value": "0"
  }
 ]
