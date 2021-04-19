@@ -1,5 +1,11 @@
 var item_name = '';
 frappe.ui.form.on("Quotation", {
+	onload: function(frm) {
+		if(frm.doc.__islocal ==1) {
+			cur_frm.clear_table("items");
+			cur_frm.refresh_fields();
+		}
+	},
 	letter_template : function(frm){
 		if(frm.doc.letter_template){
            return frappe.call({
@@ -579,8 +585,90 @@ frappe.ui.form.on("Quotation", {
 				}
 			});
 			inner_dialog.set_primary_action(__('Get Items'), function() {
-					dialog_data = inner_dialog.get_values()
-					// dialog.hide();
+					var dialog_data = inner_dialog.get_values()
+					if(dialog_data.wo_fastener == 1){
+						dialog_data.cost_sheet_items.forEach(d => {
+							if(d.is_fasteners == 1){
+								var childTable = cur_frm.add_child("items");
+								childTable.item_code = d.ri_no
+								frappe.call({
+									"method": "frappe.client.get",
+									"args": {
+										"doctype": "Item",
+										"name": d.ri_no
+									},
+									"callback": function(response) {
+										var item_doc = response.message;
+
+										if (item_doc) {
+											childTable.item_name = item_doc.item_name
+											childTable.uom = item_doc.stock_uom
+										}
+									}
+								});
+								childTable.description = d.description
+								childTable.qty = d.qty
+								childTable.rate = d.basic_rate
+
+								cur_frm.refresh_fields("items");
+							}
+						})	
+					}
+
+					if(dialog_data.with_fastener == 1){
+						dialog_data.cost_sheet_items.forEach(d => {
+							var childTable = cur_frm.add_child("items");
+							childTable.item_code = d.ri_no
+							frappe.call({
+								"method": "frappe.client.get",
+								"args": {
+									"doctype": "Item",
+									"name": d.ri_no
+								},
+								"callback": function(response) {
+									var item_doc = response.message;
+
+									if (item_doc) {
+										childTable.item_name = item_doc.item_name
+										childTable.uom = item_doc.stock_uom
+									}
+								}
+							});
+							childTable.description = d.description
+							childTable.qty = d.qty
+							childTable.rate = d.basic_rate
+
+							cur_frm.refresh_fields("items");
+						})	
+					}	
+
+					if((dialog_data.with_fastener == 0 && dialog_data.wo_fastener == 0 )){
+						dialog_data.cost_sheet_items.forEach(d => {
+							var childTable = cur_frm.add_child("items");
+							childTable.item_code = d.ri_no
+							frappe.call({
+								"method": "frappe.client.get",
+								"args": {
+									"doctype": "Item",
+									"name": d.ri_no
+								},
+								"callback": function(response) {
+									var item_doc = response.message;
+
+									if (item_doc) {
+										childTable.item_name = item_doc.item_name
+										childTable.uom = item_doc.stock_uom
+										childTable.rate = d.basic_rate
+									}
+								}
+							});
+							childTable.description = d.description
+							childTable.qty = d.qty
+
+							cur_frm.refresh_fields("items");
+						})	
+					}	
+					inner_dialog.hide();
                  d.hide();
 
 				});
