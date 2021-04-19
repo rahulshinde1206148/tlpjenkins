@@ -31,47 +31,52 @@ def get_cost_sheet_and_comp_data(cost_sheet_item):
 		comp_max_rate = frappe.db.sql("""SELECT max(rate) from `tabCompetitor Rate` 
 		where item_code='{0}'""".format(item.get('ri_no')), as_dict=1)
 		if comp_max_rate[0]['max(rate)'] :
-			item['comp_max_rate']: comp_max_rate[0]['max(rate)']
+			item['comp_max_rate']= comp_max_rate[0]['max(rate)']
 	return cost_sheet_data
 		
 @frappe.whitelist()
 def get_competitor_data(data):
+	main_data = {}
 	import json
-	print("################ data shubhangi", data)
-	print("########## testing selected item", type(data))
 	res = json.loads(data)
-	print("json",res['selected_item'])
-	print("type of json", type(res))
+	# print("json",res['selected_item'])
+	# print("type of json", type(res))
 	material_ri_no = res['selected_item']
 	data = frappe.db.sql("""SELECT item_code, item_name, competitor_name, 
 	 order_number, order_date, ordered_quantity, rate, amount  from `tabCompetitor Rate` 
-	 where item_code='{0}'""".format(int(material_ri_no)), as_dict=1)
-	print("compitetor rate&&&&&&", data)
-	return data
+	 where item_code='{0}'""".format(material_ri_no), as_dict=1)
+
+	item_name = frappe.db.sql("""SELECT item_name from `tabItem` where name='{0}'""".format(material_ri_no), as_list=1)
+	main_data.update({"data":data})
+
+	main_data.update({'item_name':item_name[0][0]})
+	return main_data
 
 @frappe.whitelist()
 def get_material_data(data):
+	main_data = {}
 	import json
-	print("################ data shubhangi", data)
-	print("########## testing selected item", type(data))
 	res = json.loads(data)
-	print("json",res['selected_item'])
-	print("type of json", type(res))
+	# print("json",res['selected_item'])
+	# print("type of json", type(res))
 	material_ri_no = res['selected_item']
-	print((material_ri_no))
 	data = frappe.db.sql("""SELECT ri_no, drilling, bending, Machining, Welding, 
 	 forging, file, die, miscellaneous from `tabOpearation Cost Setting` 
-	 where ri_no='{0}'""".format(int(material_ri_no)), as_dict=1)
-	print("material data...........",data)
-	return data
+	 where ri_no='{0}'""".format(material_ri_no), as_dict=1)
+	
+	item_name = frappe.db.sql("""SELECT item_name from `tabItem` where name='{0}'""".format(material_ri_no), as_list=1)
+	main_data.update({"data":data})
+
+	main_data.update({'item_name':item_name[0][0]})
+	return main_data
 	
 @frappe.whitelist()
 def get_set_qty(data):
 	import json
-	print("################ data shubhangi", data)
-	print("########## testing selected item", type(data))
+	# print("################ data shubhangi", data)
+	# print("########## testing selected item", type(data))
 	res = json.loads(data)
-	print("json",res['selected_item'])
-	print("type of json", type(res))
+	# print("json",res['selected_item'])
+	# print("type of json", type(res))
 	return "data"
 	
