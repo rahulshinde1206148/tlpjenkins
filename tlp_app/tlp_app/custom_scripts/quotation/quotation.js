@@ -220,35 +220,146 @@ frappe.ui.form.on("Quotation", {
 								width: 40,
 								columns : 1,
 								click: function(){
-									// frappe.ui.Dialog({})
-									var data = inner_dialog.get_values();
-									// inner_dialog.show();
-									console.log("DDDDDDDDDDDDD",inner_dialog.$wrapper.find('.modal-dialog').find('.col col-xs-1'))
-									console.log("/////////data", data)
-				              		frappe.call({
+								    var args = inner_dialog.get_values();
+								    /*console.log("DATAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaa",data.selected_item)*/
+								    var cost_shit_data = args.cost_sheet_items;
+								    cost_shit_data.forEach(d => {
+								    	/*console.log(" table data index",d.idx)*/
+								    })
+
+									var hash_dialog = new frappe.ui.Dialog({
+								    	title: __(""),
+								    	fields: [
+								    		{
+								    			"fieldtype": "HTML",
+								    			"label": __(""),
+								    			"fieldname": "hash_button_dialog"
+								    		}
+								    	]
+								    });
+								    frappe.call({
 										method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_competitor_data',
-										freeze: true,
+										async: false,
 										args: {"data":data},
 										callback: function(r) {
 											if(r.message){
-												var d = new frappe.ui.Dialog({
-													'fields': [
-														{'fieldname': 'ht', 'fieldtype': 'HTML'},
-														{'fieldname': 'today', 'fieldtype': 'Date', 'default': frappe.datetime.nowdate()}
-													],
-													primary_action: function(){
-														d.hide();
-														show_alert(d.get_values());
-													}
-												});
-												d.fields_dict.ht.$wrapper.html("<table border = '1'><tr><th>Company</th><th>Contact</th><th>Country</th></tr>{% for row in r.message %}<tr><td>{{ row.item_code}}</td><td>{{ row.competitor_name}}</td><td>{{ row.rate}}</td></tr> {% endfor %}</table>");
-												d.show();
-												// dialog.hide();
-												// window.location.reload()
+												var item_name = r.message.item_name
+												hash_dialog.get_field("hash_button_dialog").$wrapper.append(get_timer_html());
+												function get_timer_html() {
+													var for_data = ''
+													var index = 0
+													$.each(r.message.data, function(i, row){
+														index = index + 1
+														for_data = for_data + `<tr>
+															<td style="text-align: center;">${__(index)}</td>
+															<td style="text-align: left;">${__(row.competitor_name)}</td>
+															<td style="text-align: right;">${__(row.order_number)}</td>
+															<td style="text-align: right;">${__(row.order_date)}</td>
+															<td style="text-align: right;">${__(row.ordered_quantity)}</td>
+															<td style="text-align: right;">${__(row.rate)}</td>
+														</tr>`
+													 });	
+													var table_data = `
+														<table class="table table-bordered">
+															<tr>
+																<th style="text-align: left;" colspan="6">${__(data.selected_item)}-${__(item_name)}</th>
+															</tr>
+															<tr style="background-color: #f7fafc;">
+																<th style="text-align: center;">Sr. No.</th>
+																<th style="text-align: center;">Competitor Name</th>
+																<th style="text-align: center;">PO No.</th>
+																<th style="text-align: center;">PO Date</th>
+																<th style="text-align: center;">Qty. Sold</th>
+																<th style="text-align: center;">Rate</th>
+															</tr>`+	for_data +
+														`</table>
+													`;
+													/*console.log("Table Data Console,,,,,,,",for_data)
+													console.log("Table Data Console,,,,,,,",table_data)*/
+													return table_data
+												}
 											}
 										}
 									});
-									
+								    hash_dialog.show();
+
+
+
+
+
+
+									/*frappe.call({
+										method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_competitor_data',
+										async: false,
+										args: {"data":data},
+										callback: function(r) {
+											if(r.message){
+												console.log("Message >>>>>>>>>>>>>>>>>>>",r.message)
+											}
+										}
+									});*/
+
+									/*var data = inner_dialog.get_values();*/
+									/*var hash_dialog = new frappe.ui.Dialog({
+										fields: [
+											{
+												fieldname: "hash_cost_sheet_items", fieldtype: "Table",
+												cannot_add_rows: 1,
+												data: this.data,						
+												get_data: () => {
+													console.log("=========111111111==============%%%%%%%%%%%%%",this.data);
+													return this.data;
+												},
+												fields: [
+													{
+														fieldtype:'Link',
+														fieldname:"ri_no",
+														options: 'Item',
+														in_list_view: 1,
+														label: __('RI No'),
+														columns:1,
+														size: 2,
+														"read_only":1,
+													
+													},
+													{
+														fieldtype:'Text',
+														fieldname:"description",
+														in_list_view: 1,
+														label: __('Description'),
+														columns : 1,
+														width: 40,
+														"read_only":1,
+													},
+												],
+											}
+										],
+									});
+
+				              		frappe.call({
+										method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_competitor_data',
+										async: false,
+										args: {"data":data},
+										callback: function(r) {
+											console.log("Return message,,,,,,,,,,,,,,,,,",r)
+											if(r.message){
+												console.log("!!!!!!!!!!!!!!!!!!",r.message)
+												const cost_sheet_data = r.message
+												console.log("R>MESSAGE.........",cost_sheet_data)
+												console.log("loop data RRRRRRRRRRRRRRRRRRRR",hash_dialog.fields_dict.hash_cost_sheet_items.df)
+												cost_sheet_data.forEach(di => {
+								        			hash_dialog.fields_dict.hash_cost_sheet_items.df.data.push({
+														"ri_no": di.competitor_name,
+														"description": di.item_code,
+													});
+												})
+												this.data = hash_dialog.fields_dict.hash_cost_sheet_items.df.data;
+												hash_dialog.fields_dict.hash_cost_sheet_items.grid.refresh();
+												hash_dialog.show();
+
+											}
+										}
+									});*/									
 				              	}	
 							},
 							{
@@ -262,8 +373,17 @@ frappe.ui.form.on("Quotation", {
 									// frappe.ui.Dialog({})
 									var data = inner_dialog.get_values();
 									// inner_dialog.show();
-									/*console.log("DDDDDDDDDDDDD",inner_dialog.$wrapper.find('.modal-dialog').find('.col col-xs-1'))
-									console.log("/////////data", data)*/
+									/*console.log("DDDDDDDDDDDDD,,,,,,,,,,,,,,,,,,,,,,",inner_dialog.$wrapper.find('.modal-dialog').find('.col col-xs-1'))*/
+									var hash_dialog = new frappe.ui.Dialog({
+								    	title: __(""),
+								    	fields: [
+								    		{
+								    			"fieldtype": "HTML",
+								    			"label": __(""),
+								    			"fieldname": "aero_button_dialog"
+								    		}
+								    	]
+								    });
 				              		frappe.call({
 										method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_material_data',
 										freeze: true,
@@ -273,88 +393,47 @@ frappe.ui.form.on("Quotation", {
 										// },
 										callback: function(r) {
 											if(r.message){
-												console.log(r.message)
-												var arow_data = r.message
-												frappe.render_template("quotation",{"data":r.message})
-												// $('.quotation').html($(frappe.render_template('quotation',{"arow_data":arow_data})))
-												console.log("data_list.......", r.message[0])
-												var d = new frappe.ui.Dialog({
-													
-													// 'fields': [
-													// 			{
-																// fieldname: "cost_sheet_items", fieldtype: "Table",
-																// cannot_add_rows: 1,
-																// data: this.data,						
-																// get_data: () => {
-																// 	return this.data;
-																// },
-																'fields': [
-																	{
-																		fieldtype:'Link',
-																		fieldname:data["ri_no"],
-																		options: 'Item',
-																		in_list_view: 1,
-																		label: __('RI No'),
-																		columns:1,
-																		"read_only":1,
-																	
-																	},
-																	{
-																		fieldtype:'Currency',
-																		fieldname:"drilling",
-																		in_list_view: 1,
-																		label: __('Drilling'),
-																		columns : 1,
-																		"read_only":1,
-																	},
-																	]
-													    /*{
-															fieldname: "arow_data", fieldtype: "Table",
-															cannot_add_rows: 1,
-															data: this.data,						
-															get_data: () => {
-																return this.data;
-															},
-															fields: [
-																{
-																	fieldtype:'Link',
-																	fieldname:"ri_no",
-																	options: 'Item',
-																	in_list_view: 1,
-																	label: __('RI No'),
-																	columns:1,
-																	size: 2,
-																	"read_only":1,
-																
-																},
-																{
-																	fieldtype:'Currency',
-																	fieldname:"drilling",
-																	in_list_view: 1,
-																	label: __('Drilling'),
-																	columns : 1,
-																	width: 40,
-																	"read_only":1,
-																},
-															],
-														},*/
-													}
-													// ],
-
-													/*primary_action: function(){
-														d.hide();
-														show_alert(d.get_values());
-													}*/
-												// }
-												);
-												d.show();
-
-												// dialog.hide();
-												// window.location.reload()
+												hash_dialog.get_field("aero_button_dialog").$wrapper.append(get_timer_html());
+												function get_timer_html() {
+													var item_name = r.message.item_name
+													var for_data = ''
+													$.each(r.message.data, function(i, row){
+														for_data = for_data + `<tr>
+															<td style="text-align: right;">${__(row.drilling)}</td>
+															<td style="text-align: right;">${__(row.bending)}</td>
+															<td style="text-align: right;">${__(row.Machining)}</td>
+															<td style="text-align: right;">${__(row.Welding)}</td>
+															<td style="text-align: right;">${__(row.forging)}</td>
+															<td style="text-align: right;">${__(row.file)}</td>
+															<td style="text-align: right;">${__(row.die)}</td>
+															<td style="text-align: right;">${__(row.miscellaneous)}</td>
+														</tr>`
+													 });	
+													var table_data = `
+														<table class="table table-bordered">
+															<tr>
+																<th style="text-align: left;" colspan="8">${__(data.selected_item)}-${__(item_name)}</th>
+															</tr>
+															<tr style="background-color: #f7fafc;">
+																<th style="text-align: center;">Drilling</th>
+																<th style="text-align: center;">Bending</th>
+																<th style="text-align: center;">Machining</th>
+																<th style="text-align: center;">Welding</th>
+																<th style="text-align: center;">Forging</th>
+																<th style="text-align: center;">Filing</th>
+																<th style="text-align: center;">Die</th>
+																<th style="text-align: center;">Miscellaneous</th>
+															</tr>`+	for_data +
+														`</table>
+													`;
+													/*console.log("Table Data Console,,,,,,,",for_data)
+													console.log("Table Data Console,,,,,,,",table_data)*/
+													return table_data
+												}										
 											}
 										}
 									});
-									
+									hash_dialog.show();									
 				              	}	
 							},	
 							{fieldtype:"Column Break"},
