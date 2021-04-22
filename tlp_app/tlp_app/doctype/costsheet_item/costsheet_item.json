@@ -112,12 +112,11 @@
    "in_list_view": 1,
    "label": "Item Name",
    "options": "Item",
-   "read_only": 1,
-   "unique": 1
+   "read_only": 1
   }
  ],
  "istable": 1,
- "modified": "2021-02-11 11:20:29.895134",
+ "modified": "2021-04-22 18:13:01.487528",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Costsheet Item",
