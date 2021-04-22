@@ -61,7 +61,7 @@ frappe.ui.form.on('Cost Sheet', {
 	        $.each(tabletransfer.items, function(index, row){
 	        	if (row.is_fasteners == 0){
 		            var d = frm.add_child("operation_or_labour_items");
-		            d.ri_no = row.item_code;
+		            // d.ri_no = row.item_code;
 		            d.description = row.description;
 		            d.quantity = row.qty;
 		            get_operations_data(frm);
@@ -74,6 +74,7 @@ frappe.ui.form.on('Cost Sheet', {
 					    },
 						callback:function(r) {
 							if(r){
+								d.ri_no = row.item_code;
 								get_parameters_cost(r.message.galvanization_parameter,r.message.casting_parameter)
 								d.material_type = r.message.made_out_of;
 								d.rough_weightkg = r.message.weight_per_unit;
