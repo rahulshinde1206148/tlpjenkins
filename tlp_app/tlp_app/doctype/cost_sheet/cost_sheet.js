@@ -61,11 +61,10 @@ frappe.ui.form.on('Cost Sheet', {
 	        $.each(tabletransfer.items, function(index, row){
 	        	if (row.is_fasteners == 0){
 		            var d = frm.add_child("operation_or_labour_items");
-		            // d.ri_no = row.item_code;
+		            d.ri_no = row.item_code;
 		            d.description = row.description;
 		            d.quantity = row.qty;
 		            get_operations_data(frm);
-
 		            frappe.call({
 						method: "frappe.client.get",
 						args:{
@@ -74,7 +73,6 @@ frappe.ui.form.on('Cost Sheet', {
 					    },
 						callback:function(r) {
 							if(r){
-								d.ri_no = row.item_code;
 								get_parameters_cost(r.message.galvanization_parameter,r.message.casting_parameter)
 								d.material_type = r.message.made_out_of;
 								d.rough_weightkg = r.message.weight_per_unit;
@@ -185,45 +183,83 @@ var get_parameters_cost = function(galvanization_parameter,casting_parameter ){
 
 var get_operations_data = function(frm) {
 	$.each(frm.doc.operation_or_labour_items, function(index, row){
-	    frappe.call({
-			method: "frappe.client.get",
-			args:{
-				doctype: "Opearation Cost Setting",
-				filters: {'ri_no': row.ri_no}
-		    },
-			callback:function(r) {
-				if(r){
-					if (r.message.drilling){
-	                   row.drilling = r.message.drilling;
-		        	}
-		        	if (r.message.bending){
-	                   row.bending = r.message.bending;
-		        	}
-		        	if (r.message.welding){
-	                   row.welding = r.message.welding;
-		        	}
-		        	if (r.message.machining){
-	                   row.maching = r.message.machining;
-		        	}
-		        	if (r.message.forging){
-	                   row.forging = r.message.forging;
-		        	}
-		        	if (r.message.file){
-	                   row.file = r.message.file;
-		        	}
-		        	if (r.message.die){
-	                   row.die = r.message.die;
-		        	}
-		        	if (r.message.miscellaneous){
-	                   row.miscellaneous = r.message.miscellaneous;
-		        	}
+		frappe.db.exists('Opearation Cost Setting', row.ri_no)
+		    .then(exists => {
+				if (exists === true){
+				    frappe.call({
+						method: "frappe.client.get",
+						args:{
+							doctype: "Opearation Cost Setting",
+							filters: {'ri_no': row.ri_no}
+					    },
+						callback:function(r) {
+							if(r.message){
+								if (r.message.drilling){
+									row.drilling = r.message.drilling;
+								}else{
+									row.drilling = 0.0;
+								}
+								if (r.message.bending){
+									row.bending = r.message.bending;
+								}
+								else{
+									row.bending = 0.0;
+								}
+								if (r.message.welding){
+									row.welding = r.message.welding;
+								}
+								else{
+									row.welding = 0.0;
+								}
+								if (r.message.machining){
+							       row.maching = r.message.machining;
+								}
+								else{
+									row.maching = 0.0;
+								}
+								if (r.message.forging){
+							       row.forging = r.message.forging;
+								}
+								else{
+									row.forging = 0.0;
+								}
+								if (r.message.file){
+							       row.file = r.message.file;
+								}
+								else{
+									row.file = 0.0;
+								}
+								if (r.message.die){
+							       row.die = r.message.die;
+								}
+								else{
+									row.die = 0.0;
+								}
+								if (r.message.miscellaneous){
+									row.miscellaneous = r.message.miscellaneous;
+								}
+								else{
+									row.miscellaneous = 0.0;
+								}
+							}
+							else{
+								frappe.msgprint(__("Please add operation cost on Opearation Cost Setting"))
+							}
+							frm.refresh_fields("operation_or_labour_items");
+						}
+					});
 				}
 				else{
-					frappe.msgprint(__("Please add operation cost on Opearation Cost Setting"))
+					row.drilling = 0.0;
+					row.bending = 0.0;
+					row.welding = 0.0;
+					row.maching = 0.0;
+					row.forging = 0.0;
+					row.file = 0.0;
+					row.die  = 0.0;
+					row.miscellaneous = 0.0;
 				}
-				frm.refresh_fields("operation_or_labour_items");
-			}
-		});
+		})
 	});
 };
 
@@ -298,7 +334,6 @@ frappe.ui.form.on('Cost Working Items', {
 		if (d.is_fasteners == 0){
            	   
             	if(d.set_rate){
-            		// console.log("is_semifinished", d.set_rate)
             		frappe.model.set_value(cdt, cdn, "basic_rate", d.set_rate);
             	}
             }
