@@ -21,7 +21,7 @@ def get_cost_sheet_and_comp_data(cost_sheet_item):
 	cost_sheet_data = frappe.db.sql("""SELECT ri_no, description,material_type, quantity,set_rate, basic_rate,
 	 cost_rate, percent_1, amount_of_percent_1, percent_2, amount_of_percent_2, percent_3, 
 	 amount_of_percent_3,is_fasteners from `tabCost Working Items` 
-	 where parent=(select name from `tabCost Sheet` where item_name='{0}')
+	 where parent=(select name from `tabCost Sheet` where item_name='{0}' LIMIT 1)
 	 order by idx""".format(cost_sheet_item), as_dict=1)
 	for item in cost_sheet_data:
 		comp_min_rate = frappe.db.sql("""SELECT min(rate) from `tabCompetitor Rate` 
