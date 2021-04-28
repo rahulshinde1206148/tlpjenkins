@@ -13,13 +13,13 @@ frappe.ui.form.on('TLP Setting Page', {
 		 	if (row.parameter == 'AB Alloy'){
 		 		row.rskg = ab_alloy
 		 		var df = frappe.meta.get_docfield("Aluminium Bronze","rskg",  cur_frm.doc.name);
-                df.read_only = 1;
+                // df.read_only = 1;
 		 	}
 		 	if((row.parameter).includes('AB Alloy (AB) +') && (row.parameter).includes('Melting Loss')){
                  row.rskg = ab_alloy * ((100+ row.percent)/100)
                  frm.save()
                  var df = frappe.meta.get_docfield("Aluminium Bronze","rskg",  cur_frm.doc.name);
-				 df.read_only = 1;
+				 // df.read_only = 1;
 		 	}
 		});
 		if(frm.doc.labour_factor){
