@@ -13,7 +13,8 @@
   "forging",
   "file",
   "die",
-  "miscellaneous"
+  "miscellaneous",
+  "casting"
  ],
  "fields": [
   {
@@ -70,9 +71,15 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Welding"
+  },
+  {
+   "fieldname": "casting",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Casting"
   }
  ],
- "modified": "2021-02-05 15:37:59.869427",
+ "modified": "2021-04-29 16:21:44.236786",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Opearation Cost Setting",
