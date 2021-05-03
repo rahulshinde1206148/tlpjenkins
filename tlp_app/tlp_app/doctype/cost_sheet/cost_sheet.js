@@ -45,7 +45,14 @@ frappe.ui.form.on('Cost Sheet', {
 							d.material_type = r.message.made_out_of;
 							d.finished_weightkg = r.message.finished_weight;
 							d.rough_weightkg = r.message.weight_per_unit;
-							d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
+							if(r.message.material_parameter !== null){
+								get_material_cost(r.message.material_parameter,d,r.message.weight_per_unit)
+								frm.refresh_fields("material_cost_items");
+							}
+							else{
+								d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
+								frm.refresh_fields("material_cost_items");
+							}
 						}
 						frm.refresh_fields("material_cost_items");
 					}
@@ -110,7 +117,14 @@ frappe.ui.form.on('Cost Sheet', {
 						if(r){
 							d.material_type = r.message.made_out_of;
 							frm.refresh_fields("cost_working_items");
-							d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
+							if(r.message.material_parameter !== null){
+								get_material_cost(r.message.material_parameter,d,r.message.weight_per_unit)
+								frm.refresh_fields("cost_working_items");
+							}
+							else{
+								d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
+								frm.refresh_fields("cost_working_items");
+							}
 							$.each(frm.doc.operation_or_labour_items , function(index, row){
 								frm.refresh_fields("cost_working_items");
 								if(row.ri_no == d.ri_no){
@@ -135,17 +149,48 @@ frappe.ui.form.on('Cost Sheet', {
 	},
 	refresh:function(frm){
  		$(".grid-add-row").hide();
- 		get_ab_8_melting_loss(frm);
+ 		// get_ab_8_melting_loss(frm);
+ 		// get_material_cost(frm)
 	}
 	
 });
 
-var get_ab_8_melting_loss = function(frm) {
+// var get_ab_8_melting_loss = function(frm) {
+// 	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
+// 		var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
+//         $.each(table.aluminium_bronze, function(index, row){
+//         	if ((row.parameter).includes('AB Alloy (AB) +') && (row.parameter).includes('Melting Loss')){
+//         		ab_8_melting_loss = row.rskg;
+//         	}
+//         });	
+//     });
+// };
+
+var get_material_cost = function(material_parameter,d,rough_wt){
 	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
-		var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
+        var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
         $.each(table.aluminium_bronze, function(index, row){
-        	if ((row.parameter).includes('AB Alloy (AB) +') && (row.parameter).includes('Melting Loss')){
+        	if (row.parameter == material_parameter){
         		ab_8_melting_loss = row.rskg;
+        		if(d){
+        		d.material_cost = flt(flt(ab_8_melting_loss) * flt(rough_wt));
+        	}
+        	}
+        });	
+        $.each(table.aluminium, function(index, row){
+        	if (row.parameter == material_parameter ){
+        		ab_8_melting_loss = row.rskg;
+        		if(d){
+        		d.material_cost = flt(flt(ab_8_melting_loss) * flt(rough_wt));
+        	}
+        	}
+        });	
+        $.each(table.ferrous, function(index, row){
+        	if (row.parameter == material_parameter ){
+        		ab_8_melting_loss = row.rskg;
+        		if(d){
+        		d.material_cost = flt(flt(ab_8_melting_loss) * flt(rough_wt));
+        	}
         	}
         });	
     });

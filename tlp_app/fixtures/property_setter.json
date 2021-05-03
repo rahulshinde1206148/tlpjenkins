@@ -1,6 +1,38 @@
 [
  {
   "default_value": null,
+  "doc_type": "BOM",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "naming_series",
+  "modified": "2021-04-19 18:31:46.189599",
+  "name": "BOM-naming_series-default",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "default",
+  "property_type": "Text",
+  "value": ""
+ },
+ {
+  "default_value": null,
+  "doc_type": "BOM",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "naming_series",
+  "modified": "2021-04-19 18:31:46.215162",
+  "name": "BOM-naming_series-options",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "options",
+  "property_type": "Text",
+  "value": "\nAssembly-With-Fasteners-\nAssembly-Without-Fasteners-"
+ },
+ {
+  "default_value": null,
   "doc_type": "Item",
   "docstatus": 0,
   "doctype": "Property Setter",

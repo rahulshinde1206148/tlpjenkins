@@ -56,7 +56,7 @@ def set_basic_rate_cost_rate(doc):
                 if tlp_setting_doc.cost_on_overheads :
                     i.percent_on_basic_rate_for_cost_rate = tlp_setting_doc.cost_on_overheads
                 if i.percent_on_basic_rate_for_cost_rate > 0 :
-                    i.cost_rate = (( flt(i.basic_rate)  * i.percent_on_basic_rate_for_cost_rate)/100)+ flt(i.basic_rate) 
+                    i.cost_rate = ( flt(i.basic_rate)  * i.percent_on_basic_rate_for_cost_rate) 
                     total_cost += flt(i.cost_rate)
     if doc.costsheet_items :
         for i in doc.costsheet_items:
@@ -125,7 +125,7 @@ def set_labour_cost(doc):
             sum_of_operations += float(i.miscellaneous) 
         tlp_setting_doc = frappe.get_doc("TLP Setting Page","TLP-Setting-00001")
         if tlp_setting_doc.cost_on_overheads :
-            labour_factor= frappe.db.get_value("TLP Setting Page", {'name':"TLP-Setting-00001"}, 'labour_factor')
+            labour_factor= frappe.db.get_value("TLP Setting Page", {'name':"TLP-Setting-00001"}, 'cost_on_labour_factor')
         i.labour_cost = sum_of_operations * labour_factor
         for j in doc.cost_working_items:
             if j.ri_no == i.ri_no:
