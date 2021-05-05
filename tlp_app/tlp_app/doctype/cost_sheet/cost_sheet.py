@@ -32,7 +32,7 @@ def get_value_of_fastneres_from_purchase_invoice(doc):
                 else:
                     throw(_("Please create purchase invoice for fasteners items "))
             else:
-                if i.labour_cost and i.material_cost:
+                if i.labour_cost or i.material_cost:                  
                     i.piece_rate = i.labour_cost + i.material_cost
             if i.piece_rate:
                 i.set_rate =i.piece_rate *i.quantity
