@@ -80,11 +80,22 @@ frappe.ui.form.on('Cost Sheet', {
 					    },
 						callback:function(r) {
 							if(r){
-								get_parameters_cost(r.message.galvanization_parameter,r.message.casting_parameter)
+								// get_parameters_cost(r.message.galvanization_parameter,r.message.casting_parameter)
+								get_parameters_cost(r.message.galvanization_parameter)
 								d.material_type = r.message.made_out_of;
 								d.rough_weightkg = r.message.weight_per_unit;
-								
-								d.casting = r.message.weight_per_unit * casting_charges ;
+								if(r.message.casting_parameter !== null) {
+									get_parameters_casting(r.message.casting_parameter,r.message.weight_per_unit,d)
+								}
+								else if (r.message.casting_parameter === null) {
+									casting_charges = 0.0
+									get_casting_cost(row.item_code,r.message.weight_per_unit,d)
+								}
+								else{
+									casting_charges = 0.0
+									d.casting = r.message.weight_per_unit * casting_charges ;
+								}
+								// d.casting = r.message.weight_per_unit * casting_charges ;
 								d.galvanization = r.message.finished_weight * galvanization_charges ;
 							}
 							frm.refresh_fields("operation_or_labour_items");
@@ -119,11 +130,9 @@ frappe.ui.form.on('Cost Sheet', {
 							frm.refresh_fields("cost_working_items");
 							if(r.message.material_parameter !== null){
 								get_material_cost(r.message.material_parameter,d,r.message.weight_per_unit)
-								frm.refresh_fields("cost_working_items");
 							}
 							else{
 								d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
-								frm.refresh_fields("cost_working_items");
 							}
 							$.each(frm.doc.operation_or_labour_items , function(index, row){
 								frm.refresh_fields("cost_working_items");
@@ -134,9 +143,11 @@ frappe.ui.form.on('Cost Sheet', {
 						    });
                             if(d.labour_cost){
 								d.piece_rate = d.material_cost + d.labour_cost;
+								frm.refresh_fields("cost_working_items");
 							}
 							if(d.piece_rate){
 								d.set_rate = d.piece_rate * d.quantity;
+								frm.refresh_fields("cost_working_items");
 							}
 
 						frm.refresh_fields("cost_working_items");
@@ -173,7 +184,7 @@ var get_material_cost = function(material_parameter,d,rough_wt){
         	if (row.parameter == material_parameter){
         		ab_8_melting_loss = row.rskg;
         		if(d){
-        		d.material_cost = flt(flt(ab_8_melting_loss) * flt(rough_wt));
+        		d.material_cost = ab_8_melting_loss * rough_wt;
         	}
         	}
         });	
@@ -181,7 +192,7 @@ var get_material_cost = function(material_parameter,d,rough_wt){
         	if (row.parameter == material_parameter ){
         		ab_8_melting_loss = row.rskg;
         		if(d){
-        		d.material_cost = flt(flt(ab_8_melting_loss) * flt(rough_wt));
+        		d.material_cost = ab_8_melting_loss * rough_wt;
         	}
         	}
         });	
@@ -189,40 +200,97 @@ var get_material_cost = function(material_parameter,d,rough_wt){
         	if (row.parameter == material_parameter ){
         		ab_8_melting_loss = row.rskg;
         		if(d){
-        		d.material_cost = flt(flt(ab_8_melting_loss) * flt(rough_wt));
+        		d.material_cost = ab_8_melting_loss * rough_wt;
         	}
         	}
         });	
     });
 };
 
-var get_parameters_cost = function(galvanization_parameter,casting_parameter ){
+// var get_parameters_cost = function(galvanization_parameter,casting_parameter ){
+// 	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
+//         var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
+//         $.each(table.ferrous, function(index, row){
+//         	if (row.parameter == galvanization_parameter){
+//         		galvanization_charges = row.rskg
+//         	}
+//         	if (row.parameter == casting_parameter){
+//         		casting_charges = row.rskg
+//         	}
+//         });	
+//         $.each(table.aluminium, function(index, row){
+//         	if (row.parameter == galvanization_parameter){
+//         		galvanization_charges = row.rskg
+//         	}
+//         	if (row.parameter == casting_parameter){
+//         		casting_charges = row.rskg
+//         	}
+//         });	
+//         $.each(table.aluminium_bronze, function(index, row){
+//         	if (row.parameter == galvanization_parameter){
+//         		galvanization_charges = row.rskg
+//         	}
+//         	if (row.parameter == casting_parameter){
+//         		casting_charges = row.rskg
+//         	}
+//         });	
+//     });
+// };
+
+var get_parameters_cost = function(galvanization_parameter ){
 	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
         var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
         $.each(table.ferrous, function(index, row){
         	if (row.parameter == galvanization_parameter){
         		galvanization_charges = row.rskg
         	}
-        	if (row.parameter == casting_parameter){
-        		casting_charges = row.rskg
-        	}
         });	
         $.each(table.aluminium, function(index, row){
         	if (row.parameter == galvanization_parameter){
         		galvanization_charges = row.rskg
-        	}
-        	if (row.parameter == casting_parameter){
-        		casting_charges = row.rskg
         	}
         });	
         $.each(table.aluminium_bronze, function(index, row){
         	if (row.parameter == galvanization_parameter){
         		galvanization_charges = row.rskg
         	}
-        	if (row.parameter == casting_parameter){
-        		casting_charges = row.rskg
-        	}
         });	
+    });
+};
+
+var get_parameters_casting = function(casting_parameter,rough_wt,d){
+	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
+        var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
+        if (casting_parameter){
+	        $.each(table.ferrous, function(index, row){
+	        	if (row.parameter == casting_parameter){
+	        		casting_charges = row.rskg
+	        		d.casting = rough_wt * casting_charges;
+	        	}
+	        });	
+	        $.each(table.aluminium, function(index, row){
+	        	if (row.parameter == casting_parameter){
+	        		casting_charges = row.rskg
+	        		d.casting = rough_wt * casting_charges;
+	        	}
+	        });	
+	        $.each(table.aluminium_bronze, function(index, row){
+	        	if (row.parameter == casting_parameter){
+	        		casting_charges = row.rskg
+	        		d.casting = rough_wt * casting_charges;
+	        	}
+	        });	
+        }
+    });
+};
+
+var get_casting_cost = function(item_code,rough_wt,d){
+	frappe.model.with_doc("Opearation Cost Setting",item_code, function() {
+        var table= frappe.model.get_doc("Opearation Cost Setting", item_code)
+        if (table){
+        	casting_charges = table.casting
+        	d.casting = casting_charges ;
+        }
     });
 };
 
@@ -342,11 +410,14 @@ frappe.ui.form.on('Costsheet Items', {
 frappe.ui.form.on('Cost Working Items', {
 	labour_cost: function(frm, cdt, cdn){
 		var d = locals[cdt][cdn];
+		console.log("labour11111",d.material_cost,d.labour_cost)
 		frappe.model.set_value(cdt, cdn, "piece_rate", d.material_cost + d.labour_cost);
+		frm.refresh_fields("cost_working_items");
 	},
 	piece_rate: function(frm, cdt, cdn){
 		var d = locals[cdt][cdn];
 		frappe.model.set_value(cdt, cdn, "set_rate", d.piece_rate * d.quantity);
+		frm.refresh_fields("cost_working_items");
 	},
 	basic_rate:function(frm, cdt, cdn){
 		var d = locals[cdt][cdn];
