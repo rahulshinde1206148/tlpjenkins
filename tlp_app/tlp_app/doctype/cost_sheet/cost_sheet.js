@@ -50,6 +50,7 @@ frappe.ui.form.on('Cost Sheet', {
 								frm.refresh_fields("material_cost_items");
 							}
 							else{
+								ab_8_melting_loss = 0.0
 								d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
 								frm.refresh_fields("material_cost_items");
 							}
@@ -132,6 +133,7 @@ frappe.ui.form.on('Cost Sheet', {
 								get_material_cost(r.message.material_parameter,d,r.message.weight_per_unit)
 							}
 							else{
+								ab_8_melting_loss = 0.0
 								d.material_cost = ab_8_melting_loss * r.message.weight_per_unit;
 							}
 							$.each(frm.doc.operation_or_labour_items , function(index, row){
