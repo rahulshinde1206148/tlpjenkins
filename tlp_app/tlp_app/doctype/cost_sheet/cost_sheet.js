@@ -82,7 +82,7 @@ frappe.ui.form.on('Cost Sheet', {
 						callback:function(r) {
 							if(r){
 								// get_parameters_cost(r.message.galvanization_parameter,r.message.casting_parameter)
-								get_parameters_cost(r.message.galvanization_parameter)
+								// get_parameters_cost(r.message.galvanization_parameter)
 								d.material_type = r.message.made_out_of;
 								d.rough_weightkg = r.message.weight_per_unit;
 								if(r.message.casting_parameter !== null) {
@@ -97,7 +97,14 @@ frappe.ui.form.on('Cost Sheet', {
 									d.casting = r.message.weight_per_unit * casting_charges ;
 								}
 								// d.casting = r.message.weight_per_unit * casting_charges ;
-								d.galvanization = r.message.finished_weight * galvanization_charges ;
+								if(r.message.galvanization_charges !== null){
+									get_parameters_cost(r.message.galvanization_parameter,r.message.finished_weight,d)
+								}
+								else{
+									galvanization_charges = 0.0;
+									d.galvanization = r.message.finished_weight * galvanization_charges ;
+								}
+								// d.galvanization = r.message.finished_weight * galvanization_charges ;
 							}
 							frm.refresh_fields("operation_or_labour_items");
 						}
@@ -239,22 +246,25 @@ var get_material_cost = function(material_parameter,d,rough_wt){
 //     });
 // };
 
-var get_parameters_cost = function(galvanization_parameter ){
+var get_parameters_cost = function(galvanization_parameter,finished_weight,d){
 	frappe.model.with_doc("TLP Setting Page", "TLP-Setting-00001", function() {
         var table= frappe.model.get_doc("TLP Setting Page", "TLP-Setting-00001")
         $.each(table.ferrous, function(index, row){
         	if (row.parameter == galvanization_parameter){
         		galvanization_charges = row.rskg
+        		d.galvanization = finished_weight * galvanization_charges ;
         	}
         });	
         $.each(table.aluminium, function(index, row){
         	if (row.parameter == galvanization_parameter){
         		galvanization_charges = row.rskg
+        		d.galvanization = finished_weight * galvanization_charges ;
         	}
         });	
         $.each(table.aluminium_bronze, function(index, row){
         	if (row.parameter == galvanization_parameter){
         		galvanization_charges = row.rskg
+        		d.galvanization = finished_weight * galvanization_charges ;
         	}
         });	
     });
