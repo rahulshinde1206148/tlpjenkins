@@ -19,7 +19,6 @@ class CostSheet(Document):
         set_basic_rate_cost_rate(self) 
         calculate_amount_of_percentge(self)
         
-
 def get_value_of_fastneres_from_purchase_invoice(doc):
     if doc.cost_working_items:
         for i in doc.cost_working_items:
@@ -28,7 +27,7 @@ def get_value_of_fastneres_from_purchase_invoice(doc):
                     where docstatus=1 and item_code='{0}' """.format(i.ri_no), as_dict=1)
                 if fasteners_data:
                     result = dict(functools.reduce(operator.add, map(collections.Counter, fasteners_data)))
-                    i.piece_rate = result.get('item_cost') // result.get('qty')
+                    i.piece_rate = result.get('item_cost') / result.get('qty')
                 else:
                     throw(_("Please create purchase invoice for fasteners items "))
             else:
