@@ -6,6 +6,15 @@ frappe.ui.form.on("Quotation", {
 			cur_frm.refresh_fields();
 		}
 	},
+	validate: function (frm) {
+		if(frm.doc.items){
+			frm.doc.items.forEach(function(row){
+			if(row.rate){
+				frappe.model.set_value(row.doctype, row.name, 'margin_value', ((row.rate-row.rate_value)/row.rate_value)*100)
+			}
+			});
+			}
+	},
 	letter_template : function(frm){
 		if(frm.doc.letter_template){
            return frappe.call({
@@ -37,17 +46,15 @@ frappe.ui.form.on("Quotation", {
 		}
 	},
 	refresh(frm) {
-		frm.fields_dict["items"].grid.add_custom_button(__('Add Assembly'), function() {
+		var options = [];
+		frm.fields_dict["items"].grid.add_custom_button(__('Add Assembly'),() =>{
 		var d = new frappe.ui.Dialog({
 			'fields': [
 				{'fieldname': 'select_item',
 				 'fieldtype': 'Link',
-				 "options":  "Item",
+				 "options":  "Cost Sheet", 
 				 "label": __("Select Item"),
 				 "get_query": function () {
-					return {
-						filters: [['Item', 'is_costsheet','=', 1]]
-						}
 				    },
 				}
 				],
@@ -58,7 +65,7 @@ frappe.ui.form.on("Quotation", {
 		   	frappe.call({
 				method: "frappe.client.get",
 				args:{
-					doctype: "Item",
+					doctype: "Cost Sheet",
 					filters: {'name': data.select_item}
 				},
 				callback:function(r) {
@@ -67,63 +74,17 @@ frappe.ui.form.on("Quotation", {
 					}
 				}
 			});
+			// inner_dialog.refresh();
 			const inner_dialog = new frappe.ui.Dialog({
 
              	fields: [
 				   {
 						"fieldname":"selected_item",
 						"fieldtype": "Link",
-						"options": "Item",
-						"default" :data.select_item + item_name ,
+						"options": "Cost Sheet",
+						"default" :data.select_item ,
 						"read_only":1,
 				    },
-
-					{fieldtype:"Section Break"},
-					{
-						fieldtype:'Check',
-						fieldname:"with_fastener",
-						in_place_edit: true,
-						in_list_view: 1,
-						label: __('With Fastener'),
-						change: function() {
-							var data = inner_dialog.get_values();
-							if(data.with_fastener == 1){
-                            	$('[data-fieldname="cost_sheet_items"]').find('input:checkbox').prop('checked', true);
-							}
-							else{
-								$('.grid-row').find('input:checkbox').prop('checked', false);	
-							}
-						}
-					},
-					{fieldtype:"Column Break"},
-
-					{
-						fieldtype:'Check',
-						fieldname:"wo_fastener",
-						in_place_edit: true,
-						in_list_view: 1,
-						label: __('W/O Fastener'),
-						change: function() {
-							var data = inner_dialog.get_values();
-							console.log("data: ", data.cost_sheet_items)
-							if(data.wo_fastener == 1){
-							var i;
-							// console.log("len of costsheet list", data.cost_sheet_items.length)
-							// console.log("value1 ###",data.cost_sheet_items[0].is_fasteners)
-							for (i = 0; i < data.cost_sheet_items.length+1; i++) {
-								if(data.cost_sheet_items[i].is_fasteners == 1){
-									// console.log("data index@@@@@@",$('[data-idx='+data.cost_sheet_items[i].idx+']'))
-									$('[data-idx='+data.cost_sheet_items[i].idx+']').find('input:checkbox').prop('checked', true);
-								}
-								}
-							}
-							else{
-								$('[data-fieldname="cost_sheet_items"]').find('input:checkbox').prop('checked', false);	
-							}
-						}
-					},
-					
-					{fieldtype:"Section Break"},
 				    {
 						fieldname: "cost_sheet_items", fieldtype: "Table",
 						cannot_add_rows: 1,
@@ -227,10 +188,8 @@ frappe.ui.form.on("Quotation", {
 								columns : 1,
 								click: function(){
 								    var args = inner_dialog.get_values();
-								    /*console.log("DATAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaa",data.selected_item)*/
 								    var cost_shit_data = args.cost_sheet_items;
 								    cost_shit_data.forEach(d => {
-								    	/*console.log(" table data index",d.idx)*/
 								    })
 
 									var hash_dialog = new frappe.ui.Dialog({
@@ -280,92 +239,13 @@ frappe.ui.form.on("Quotation", {
 															</tr>`+	for_data +
 														`</table>
 													`;
-													/*console.log("Table Data Console,,,,,,,",for_data)
-													console.log("Table Data Console,,,,,,,",table_data)*/
 													return table_data
 												}
 											}
 										}
 									});
 								    hash_dialog.show();
-
-
-
-
-
-
-									/*frappe.call({
-										method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_competitor_data',
-										async: false,
-										args: {"data":data},
-										callback: function(r) {
-											if(r.message){
-												console.log("Message >>>>>>>>>>>>>>>>>>>",r.message)
-											}
-										}
-									});*/
-
-									/*var data = inner_dialog.get_values();*/
-									/*var hash_dialog = new frappe.ui.Dialog({
-										fields: [
-											{
-												fieldname: "hash_cost_sheet_items", fieldtype: "Table",
-												cannot_add_rows: 1,
-												data: this.data,						
-												get_data: () => {
-													console.log("=========111111111==============%%%%%%%%%%%%%",this.data);
-													return this.data;
-												},
-												fields: [
-													{
-														fieldtype:'Link',
-														fieldname:"ri_no",
-														options: 'Item',
-														in_list_view: 1,
-														label: __('RI No'),
-														columns:1,
-														size: 2,
-														"read_only":1,
-													
-													},
-													{
-														fieldtype:'Text',
-														fieldname:"description",
-														in_list_view: 1,
-														label: __('Description'),
-														columns : 1,
-														width: 40,
-														"read_only":1,
-													},
-												],
-											}
-										],
-									});
-
-				              		frappe.call({
-										method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_competitor_data',
-										async: false,
-										args: {"data":data},
-										callback: function(r) {
-											console.log("Return message,,,,,,,,,,,,,,,,,",r)
-											if(r.message){
-												console.log("!!!!!!!!!!!!!!!!!!",r.message)
-												const cost_sheet_data = r.message
-												console.log("R>MESSAGE.........",cost_sheet_data)
-												console.log("loop data RRRRRRRRRRRRRRRRRRRR",hash_dialog.fields_dict.hash_cost_sheet_items.df)
-												cost_sheet_data.forEach(di => {
-								        			hash_dialog.fields_dict.hash_cost_sheet_items.df.data.push({
-														"ri_no": di.competitor_name,
-														"description": di.item_code,
-													});
-												})
-												this.data = hash_dialog.fields_dict.hash_cost_sheet_items.df.data;
-												hash_dialog.fields_dict.hash_cost_sheet_items.grid.refresh();
-												hash_dialog.show();
-
-											}
-										}
-									});*/									
+								    hash_dialog.refresh();						
 				              	}	
 							},
 							{
@@ -376,10 +256,7 @@ frappe.ui.form.on("Quotation", {
 								width: 40,
 								columns : 1,
 								click: function(){
-									// frappe.ui.Dialog({})
 									var data = inner_dialog.get_values();
-									// inner_dialog.show();
-									/*console.log("DDDDDDDDDDDDD,,,,,,,,,,,,,,,,,,,,,,",inner_dialog.$wrapper.find('.modal-dialog').find('.col col-xs-1'))*/
 									var hash_dialog = new frappe.ui.Dialog({
 								    	title: __(""),
 								    	fields: [
@@ -394,9 +271,6 @@ frappe.ui.form.on("Quotation", {
 										method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_material_data',
 										freeze: true,
 										args: {"data":data},
-										// args: {
-										// 	data: data.selected_item
-										// },
 										callback: function(r) {
 											if(r.message){
 												hash_dialog.get_field("aero_button_dialog").$wrapper.append(get_timer_html());
@@ -432,14 +306,13 @@ frappe.ui.form.on("Quotation", {
 															</tr>`+	for_data +
 														`</table>
 													`;
-													/*console.log("Table Data Console,,,,,,,",for_data)
-													console.log("Table Data Console,,,,,,,",table_data)*/
 													return table_data
 												}										
 											}
 										}
 									});
-									hash_dialog.show();									
+									hash_dialog.show();	
+									hash_dialog.refresh();								
 				              	}	
 							},	
 							{fieldtype:"Column Break"},
@@ -499,58 +372,12 @@ frappe.ui.form.on("Quotation", {
 							},
 						],
 					},
-					{fieldtype:"Section Break"},
-                    {
-						fieldtype:'Button',
-						fieldname:"add_selected_assembly",
-						label: __('Add Selected Assembly'),
-						click: function(){
-							// frappe.ui.Dialog({})
-							var data = inner_dialog.get_values();
-							// inner_dialog.show();
-							console.log("DDDDDDDDDDDDD",inner_dialog.$wrapper.find('.modal-dialog').find('.col col-xs-1'))
-							console.log("/////////data", data)
-							  frappe.call({
-								method: 'tlp_app.tlp_app.custom_scripts.quotation.quotation.get_set_qty',
-								freeze: true,
-								args: {"data":data},
-								callback: function(r) {
-									if(r.message){
-										var d = new frappe.ui.Dialog({
-											'fields': [
-												{'fieldname': 'ht', 'fieldtype': 'HTML'},
-												{
-													fieldtype:'Int',
-													fieldname:"qty",
-													in_list_view: 1,
-													label: __('Quantity'),
-													columns : 1,
-													width: 40,
-												},
-											],
-											
-											primary_action: function(){
-												d.hide();
-												show_alert(d.get_values());
-											}
-										});
-										d.fields_dict.ht.$wrapper.html('Set Quantity');
-										d.fields_dict.ht.$wrapper.find('form d [type="submit"]').attr('value', 'Set');
-										d.show();
-									}
-								}
-							});
-							
-						  }	
-					}
 				]
             });
-			// inner_dialog.fields_dict.add_selected_assembly.$wrapper.html('<center><button type="button">Add Selected Assembly</button></center>')
-
             var data = inner_dialog.get_values();
 			frappe.call({
 				method: "tlp_app.tlp_app.custom_scripts.quotation.quotation.get_cost_sheet_and_comp_data",
-				freeze: true,
+				// freeze: true,
 				args: {
 					cost_sheet_item: data.selected_item
 				},
@@ -586,9 +413,9 @@ frappe.ui.form.on("Quotation", {
 			});
 			inner_dialog.set_primary_action(__('Get Items'), function() {
 					var dialog_data = inner_dialog.get_values()
-					if(dialog_data.wo_fastener == 1){
+					// if(dialog_data.wo_fastener == 1){
 						dialog_data.cost_sheet_items.forEach(d => {
-							if(d.is_fasteners == 1){
+							// if(d.is_fasteners == 1){
 								var childTable = cur_frm.add_child("items");
 								childTable.item_code = d.ri_no
 								frappe.call({
@@ -608,66 +435,13 @@ frappe.ui.form.on("Quotation", {
 								});
 								childTable.description = d.description
 								childTable.qty = d.qty
-								childTable.rate = d.basic_rate
-
+								childTable.rate = d.cost_rate
+								childTable.rate_value = d.cost_rate
+								childTable.is_fasteners = d.is_fasteners
 								cur_frm.refresh_fields("items");
-							}
+							// }
 						})	
-					}
-
-					if(dialog_data.with_fastener == 1){
-						dialog_data.cost_sheet_items.forEach(d => {
-							var childTable = cur_frm.add_child("items");
-							childTable.item_code = d.ri_no
-							frappe.call({
-								"method": "frappe.client.get",
-								"args": {
-									"doctype": "Item",
-									"name": d.ri_no
-								},
-								"callback": function(response) {
-									var item_doc = response.message;
-
-									if (item_doc) {
-										childTable.item_name = item_doc.item_name
-										childTable.uom = item_doc.stock_uom
-									}
-								}
-							});
-							childTable.description = d.description
-							childTable.qty = d.qty
-							childTable.rate = d.basic_rate
-
-							cur_frm.refresh_fields("items");
-						})	
-					}	
-
-					if((dialog_data.with_fastener == 0 && dialog_data.wo_fastener == 0 )){
-						dialog_data.cost_sheet_items.forEach(d => {
-							var childTable = cur_frm.add_child("items");
-							childTable.item_code = d.ri_no
-							frappe.call({
-								"method": "frappe.client.get",
-								"args": {
-									"doctype": "Item",
-									"name": d.ri_no
-								},
-								"callback": function(response) {
-									var item_doc = response.message;
-
-									if (item_doc) {
-										childTable.item_name = item_doc.item_name
-										childTable.uom = item_doc.stock_uom
-										childTable.rate = d.basic_rate
-									}
-								}
-							});
-							childTable.description = d.description
-							childTable.qty = d.qty
-
-							cur_frm.refresh_fields("items");
-						})	
-					}	
+					
 					inner_dialog.hide();
                  d.hide();
 
@@ -675,9 +449,9 @@ frappe.ui.form.on("Quotation", {
 			inner_dialog.show();	
             inner_dialog.$wrapper.find('.modal-dialog').css("width", "1000px");
 			});
-			// d.fields_dict.ht.$wrapper.html('Select Item');
 			 d.show();
-	    })
+			 d.refresh();
+	    }
+	    )
 	}
 });
-
