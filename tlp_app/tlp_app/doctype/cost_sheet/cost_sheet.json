@@ -94,7 +94,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2021-04-22 17:49:48.122160",
+ "modified": "2021-06-02 16:23:28.730529",
  "modified_by": "Administrator",
  "module": "Tlp App",
  "name": "Cost Sheet",
@@ -113,6 +113,7 @@
    "write": 1
   }
  ],
+ "search_fields": "item_name  ,   assembly",
  "sort_field": "modified",
  "sort_order": "DESC",
  "title_field": "item_name",
