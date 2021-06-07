@@ -636,7 +636,7 @@
   "format_data": null,
   "html": "{{ frappe.render_template(\"tlp_app/print_format/quotation/no_qty_qtn.html\",{\"doc\": doc}) }}",
   "line_breaks": 0,
-  "modified": "2021-01-05 13:29:03.228885",
+  "modified": "2021-06-07 11:26:45.199041",
   "module": "Selling",
   "name": "NO QTY QTN",
   "parent": null,
