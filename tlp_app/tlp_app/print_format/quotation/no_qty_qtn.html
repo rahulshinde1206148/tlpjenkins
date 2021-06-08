@@ -111,10 +111,29 @@
 				<td class="tac" width="5%">{{ row.idx or '' }}</td>
 				<td width="35%">{{ row.description or '' }}</td>
 				<td class="tac" width="10%">{{ row.ri_no or ''}}/{{row.drawing_no or ''}}</td>
-				<td class="tac" width="10%">{{ hsn_code  or '' }}</td>
+				<!-- <td class="tac" width="10%">{{ hsn_code  or '' }}</td> -->
+				{% if row.ri_no %}
+					{% set item_record = frappe.get_doc("Item", row.ri_no) -%}
+				<td class="tac" width="10%">{{ item_record.gst_hsn_code  or '' }}</td>
+				{% endif %}
 				<td class="tac" width="15%">{{ row.get_formatted('rate') or ''}}</td>
 			</tr>
 			{% endfor %}
+			<tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"><b></b></td>
+        		<td colspan="1" class="trs" align="right"><b>Grand Total : {{ doc.total }}</b></td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"></td>
+        		<td colspan="1" class="trs" align="right">GST @ 18%  &nbsp;:<b> {{ doc.total_taxes_and_charges }}</b></td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"><b></b></td>
+        		<td colspan="1" class="trs" align="right"><b>Total  &nbsp;: {{ doc.grand_total }}</b></td>
+        	</tr>
         </table>
         <br><br>
         <div class="row">
