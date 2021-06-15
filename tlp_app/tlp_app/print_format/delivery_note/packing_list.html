@@ -1,0 +1,215 @@
+<html>
+	<head>
+		<style>
+			.fsize{font-size: 20px;}
+			.f_font{font-family: Calibri, Candara, Segoe, Optima, Arial, sans-serif;}
+			.tar{text-align: right;}
+		    .brs{border-right: hidden;}
+		    .tac{text-align: center;}
+		    .font_size{font-size: 14px;}
+		    .sign{padding-left: 50px;}
+		</style>
+	</head>
+	<body>
+		<!-- <div class="row">
+			<table width="100%">
+				<tr>
+					{% if doc.amended_from %}
+					   	<td align="center" class="fsize"><b> Revised Quotation</b></td>
+					{% else %}
+					     <td align="center" class="fsize"><b>Quotation</b></td>
+					{% endif %}
+				</tr>
+			</table>
+		</div> -->
+		<!-- <br><br>
+	 	<div class="row">
+            <div class="col-xs-9 font_size">
+	 			Ref - {{ doc.name }}
+	 		</div>
+	 		<div class="col-xs-3 font_size">
+				{% set date = frappe.utils.formatdate((doc.transaction_date), "dd.mm.yyyy") %}
+				Date - {{ date }}
+			</div>
+		</div> -->
+			<!-- Customer & Address Section -->
+  		<!-- <div class="row">
+			<div class="col-xs-6 font_size">
+			 <b>{{doc.customer_name}}</b><br> -->
+
+				<!-- get address -->
+				<!-- {% set address = frappe.get_doc("Address", doc.customer_address) %}
+
+				{% if address.get('address_line1') %}
+					{{ address.get('address_line1') }}<br>
+				{% endif -%}
+
+				{% if address.get('address_line2') %}
+					{{ address.get('address_line2') }}<br>
+				{% endif -%}
+
+				{% if address.get('city') %}
+					{{ address.get('city') }} - 
+				{% endif %}	
+				{% if address.get('pincode') %}
+					{{ address.get('pincode') }},
+				{% endif -%}
+				{% if address.get('state') %}
+					{{ address.get('state') }}
+				{% endif -%}<br>
+
+				{% if address.get('phone') %}
+					Telephone - {{ address.get('phone') }}<br>
+				{% endif -%}
+
+				{% set phone = frappe.db.get_value("Contact Phone",{'parent':doc.contact_person},"phone") %}
+				{% if phone %}
+					Mobile - {{phone or ''}}<br>
+				{% endif %}
+			</div> -->
+        <!-- </div>
+        <br><br>
+        <div class="row">
+			<div class="col-xs-12 font_size">
+				   {% if doc.letter_detail %}{{ doc.letter_detail }}{% endif %}
+				<hr>
+				
+			</div>
+        </div> -->
+        <div class="row">
+			<table width="100%">
+				<tr>
+					<td align="center" style="font-size: 18px;"><b>Packing List</b></td>
+				</tr>
+			</table>
+		</div>
+		<!-- <div class="row">
+			<div class="col-xs-12 font_size">
+				{{ doc.terms }}
+			</div>
+        </div> -->
+        <br>
+        <table border="2px">
+        	<!-- <tr> -->
+        		<!-- <td colspan="2" class="brs"><b>{{ doc.name }}</b></td>
+    			{% if doc.amended_from %}
+				   	<td colspan="2" align="left" class="brs"><b> REVISED PRICE SCHEDULE</b></td>
+				{% else %}
+				     <td colspan="2" align="left" class="brs"><b>PRICE SCHEDULE</b></td>
+				{% endif %} -->
+        		<!-- <td colspan="1" class="trs" align="right"><b>Dated. {{ frappe.utils.formatdate((doc.transaction_date), "dd.mm.yyyy") }}</b></td>
+        	</tr> -->
+        	<tr>
+        		<td colspan="1" class="brs"><b></b></td>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"><b>Packing Details for</b></td>
+        		<td colspan="1" class="trs" align="center"><b></b></td>
+        	</tr>
+        	<tr>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"><b>Invoice No:{{ "" }}</b></td>
+        		<td colspan="1" class="trs" align="right" ><b>Dated: {{ frappe.utils.formatdate((doc.transaction_date), "dd.mm.yyyy") }}</b></td>
+        	</tr>
+        	<tr>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"><b>Party: {{ "" }}</b></td>
+        		<td colspan="1" class="trs" align="right"><b>Destination: {{ doc.grand_total }}</b></td>
+        	</tr>
+        	<tr>
+        		<th class="tac">Sr No.</th>
+        		<th class="tac">RI No./Drg. No.</th>
+        		<th class="tac">Is Fastners</th>
+        		<th class="tac">Quantity</th>
+        		<th class="tac">Month/Year</th>
+        		<th class="tac">Total Package</th>
+        		<th class="tac">Part No</th>
+        		<th class="tac">Packages</th>
+        		<th class="tac">Package No</th>
+        		<th class="tac">Weight</th>
+        		<th class="tac">Total Weight</th>
+        	</tr>
+    		{% for row in doc.items %}
+			<tr>
+				<td class="tac" width="5%">{{ row.idx or '' }}</td>
+				<td class="tac" width="10%">{{ row.item_code or ''}}</td>
+				<td class="tac" width="10%">{{ row.ri_no or ''}}</td>
+				<td class="tac" width="10%">{{ row.qty or ''}}</td>
+				<td class="tac" width="10%">{{ row.ri_no or ''}}</td>
+				<td class="tac" width="10%">{{ row.ri_no or ''}}</td>
+				<td class="tac" width="10%">{{ row.ri_no or ''}}</td>
+				<td class="tac" width="10%">{{ row.ri_no or ''}}</td>
+				<td class="tac" width="10%">{{ row.ri_no or ''}}</td>
+				<td class="tac" width="10%">{{ row.weight_per_unit or ''}}</td>
+				<td class="tac" width="10%">{{ row.total_weight or ''}}</td>
+				<!-- <td class="tac" width="10%">{{ row.ri_no or ''}}</td> -->
+			</tr>
+			{% endfor %}
+			<!-- <tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"><b></b></td>
+        		<td colspan="1" class="trs" align="right"><b>Grand Total : {{ doc.total }}</b></td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"></td>
+        		<td colspan="1" class="trs" align="right">GST @ 18%  &nbsp;:<b> {{ doc.total_taxes_and_charges }}</b></td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="2" align="center" class="brs"><b></b></td>
+        		<td colspan="1" class="trs" align="right"><b>Total  &nbsp;: {{ doc.grand_total }}</b></td>
+        	</tr> -->
+        </table>
+        
+        <!-- <div class="row">
+			<div class="col-xs-12 font_size">
+				Note
+				<hr>
+			</div>
+        </div>
+        <div class="row">
+			<div class="col-xs-12 font_size">
+			     {% if doc.notes_details %}{{ doc.notes_details }}{% endif %}
+				<hr>
+			</div>
+        </div> -->
+        <!-- <div class="row">
+			<div class="col-xs-4 font_size">
+				Thanking you, 
+			</div>
+			<div class="col-xs-3 font_size">
+				 
+			</div>
+			<div class="col-xs-5 font_size">
+				For TRANSMISSION LINE PRODUCTS 
+				<br><br><br>
+				{% if doc.siganture_user %}
+				{% set employee_signature = frappe.db.get_value("Employee",{'name':doc.siganture_user},"employee_signature") %}
+				{% set employee_name = frappe.db.get_value("Employee",{'name':doc.siganture_user},"employee_name") %}
+				{% set designation = frappe.db.get_value("Employee",{'name':doc.siganture_user},"designation") %}
+				<p class="sign">{% if employee_signature %} <img src="{{ employee_signature }}" width="120" height="90" /> {% endif %}</img></p>
+				<p class="sign">{% if employee_name %} {{ employee_name }} {% endif %}</p>
+				<p class="sign">{% if designation %} {{ designation }} {% endif %}</p>
+                {% endif %}
+			</div> -->
+        </div>
+        
+	</body>
+</html>
+
+<tr>
+					

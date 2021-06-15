@@ -1,0 +1,240 @@
+<html>
+	<head>
+		<style>
+			.fsize{font-size: 20px;}
+			.f_font{font-family: Calibri, Candara, Segoe, Optima, Arial, sans-serif;}
+			.tar{text-align: right;}
+		    .brs{border-right: hidden;}
+		    .tac{text-align: center;}
+		    .font_size{font-size: 14px;}
+		    .sign{padding-left: 50px;}
+		</style>
+	</head>
+	<body>
+		<div class="row">
+			<table width="100%">
+				<tr>
+					{% if doc.amended_from %}
+					   	<td align="center" class="fsize"><b> Revised Quotation</b></td>
+					{% else %}
+					     <td align="center" class="fsize"><b>TAX INVOICE</b></td>
+					{% endif %}
+				</tr>
+			</table>
+		</div>
+		<br><br>
+		<div class="container-fluid">
+<div class="container-fluid">
+    {% set caddress_line1 = frappe.db.get_value("Address", doc.company_address, "address_line1") %}
+          {% set caddress_line2 = frappe.db.get_value("Address", doc.company_address, "address_line2") %}
+          {% set ccity = frappe.db.get_value("Address",doc.company_address, "city") %}
+          {% set cpincode = frappe.db.get_value("Address", doc.company_address, "pincode") %}
+          {% set cstate = frappe.db.get_value("Address", doc.company_address, "state") %}
+          {% set ccountry = frappe.db.get_value("Address", doc.company_address, "country") %}
+          {% set cgstin = frappe.db.get_value("Address", doc.company_address, "gstin") %}
+          {% set cgst_state = frappe.db.get_value("Address", doc.company_address, "gst_state") %}
+          {% set cgst_state_no = frappe.db.get_value("Address", doc.company_address, "gst_state_number") %}
+          {% set cemail = frappe.db.get_value("Address", doc.company_address, "email_id") %}
+      
+      
+      {%set dn_no = frappe.db.get_value("Sales Invoice Item",{'parent':doc.name }, "delivery_note")%}
+      {%set dn_date = frappe.db.get_value("Delivery Note",{'name': dn_no }, "posting_date")%}
+      <table border="1px" bordercolor="#a9a9a9" style="table-layout: fixed;" width="100%">
+    <tbody><tr><td colspan="3" rowspan="3"><b>{{doc.company}}</b><br>{{caddress_line1}}<br>{{caddress_line2}}<br>GSTIN/UIN : {{cgstin}}<br>State Name : {{cstate}} Code : {{cgst_state_no}}<br>Email : {{cemail or ''}}</td>
+      <td>Invoice No : <br><b>{{doc.name}}</b></td>
+      <td>Date : <br><b>{{ frappe.utils.formatdate(doc.posting_date, "dd-mm-yyyy") }}<b></b></b></td>
+    </tr>
+    {% set number_dn = [] %}
+        {% for item in doc.items %}
+          {% if item.delivery_note not in number_dn %}
+                {{ number_dn.append(item.delivery_note) or '' }}
+            {% endif %}
+        {% endfor %}
+        {% set dn_no = frappe.db.get_value("Delivery Note Item",{'against_sales_order':doc.name},'parent')%}
+    <tr><td>Delivery Note<br><b><!-- {% for item in number_dn %}{{item or ""}}<br> {% endfor %} -->{{dn_no or ''}}</b></td>
+      <td>Mode /Terms of Payment<br><b>{{doc.payment_terms_template or ''}}</b></td>
+    </tr>
+    <tr>
+      <td>Supplier Refernece </td>
+      <td>Other References</td>
+    </tr>
+    {%set dn_no = frappe.db.get_value("Sales Invoice Item",{'parent':doc.name }, "delivery_note")%}
+      
+      {% set address_line1 = frappe.db.get_value("Address", doc.customer_address, "address_line1") %}
+      {% set address_line2 = frappe.db.get_value("Address", doc.customer_address, "address_line2") %}
+      {% set city = frappe.db.get_value("Address",doc.customer_address, "city") %}
+      {% set pincode = frappe.db.get_value("Address", doc.customer_address, "pincode") %}
+      {% set state = frappe.db.get_value("Address", doc.customer_address, "state") %}
+      {% set country = frappe.db.get_value("Address", doc.customer_address, "country") %}
+      {% set gstin = frappe.db.get_value("Address", doc.customer_address, "gstin") %}
+      {% set gst_state = frappe.db.get_value("Address", doc.customer_address, "gst_state") %}
+      {% set gst_state_no = frappe.db.get_value("Address", doc.customer_address, "gst_state_number") %}
+      {% set email = frappe.db.get_value("Address", doc.customer_address, "email_id") %}
+      {% set phone = frappe.db.get_value("Address", doc.customer_address, "phone") %}
+      {% set pan = frappe.db.get_value("Customer", doc.customer, "tax_id") %}
+      {%set so_no = frappe.db.get_value("Sales Invoice Item",{'parent':doc.name }, "sales_order")%}
+      {%set so_date = frappe.db.get_value("Sales Order",{'name': so_no }, "transaction_date")%}
+      
+      {% if doc.shipping_address_name %}
+      {% set shipping_address_line1 = frappe.db.get_value("Address", doc.shipping_address_name, "address_line1") %}
+      {% set shipping_address_line2 = frappe.db.get_value("Address", doc.shipping_address_name, "address_line2") %}
+      {% set shipping_city = frappe.db.get_value("Address",doc.shipping_address_name, "city") %}
+      {% set shipping_pincode = frappe.db.get_value("Address", doc.shipping_address_name, "pincode") %}
+      {% set shipping_state = frappe.db.get_value("Address", doc.shipping_address_name, "state") %}
+      {% set shipping_country = frappe.db.get_value("Address", doc.shipping_address_name, "country") %}
+      {% set shipping_gstin = frappe.db.get_value("Address", doc.shipping_address_name, "gstin") %}
+      {% set shipping_gst_state = frappe.db.get_value("Address", doc.shipping_address_name, "gst_state") %}
+      {% set shipping_gst_state_no = frappe.db.get_value("Address", doc.shipping_address_name, "gst_state_number") %}
+      {% set shipping_email = frappe.db.get_value("Address", doc.shipping_address_name, "email_id") %}
+      {% set shipping_phone = frappe.db.get_value("Address", doc.shipping_address_name, "phone") %}
+      
+    <tr><td colspan="3" rowspan="4"><b>Consignee: {{doc.customer or ""}}</b><br>{{shipping_address_line1}}<br>{{shipping_address_line2}}{{shipping_city}}{{shipping_pincode}}<br>Tel # {{shipping_phone}}<br>Email : {{shipping_email or ''}}<br>GSTIN/UIN : {{shipping_gstin}}<br>PAN/IT No. : {{pan}}<br>State Name : {{shipping_gst_state}} Code : {{shipping_gst_state_no}}</td>
+      <td>Buyer Order No.<br><b>{{doc.name}}</b></td>
+      
+      <td>Date<br><b>{{frappe.utils.formatdate(doc.posting_date,"dd-mm-yyyy") or ""}}</b></td>
+    </tr>
+    {% else %}
+     <tr><td colspan="3" rowspan="4"><b>Consignee: {{doc.customer or ""}}</b><br>{{address_line1}}<br>{{address_line2}}{{city}}{{pincode}}<br>Tel # {{phone}}<br>{{drug_licence_no or ''}}<br>Email : {{email or ''}}<br>GSTIN/UIN : {{gstin}}<br>PAN/IT No. : {{pan}}<br>State Name : {{state}} Code : {{gst_state_no}}</td>
+      {% set number_so = [] %}
+        {% for item in doc.items %}
+          {% if item.sales_order not in number_so %}
+                {{ number_so.append(item.sales_order) or '' }}
+            {% endif %}
+        {% endfor %}
+      <td>Buyer Order No.<br><b>{{doc.name}}
+      </b></td>
+      <td>Date<br><b>{{frappe.utils.formatdate(doc.transaction_date,"dd-mm-yyyy") or ""}}</b></td>
+    </tr>
+    {% endif %}
+    <tr><td>Dispatch Document No.</td>
+      {% set dn_no = frappe.db.get_value("Delivery Note Item",{'against_sales_order':doc.name},'parent')%}
+      {% set dn_date = frappe.db.get_value("Delivery Note",{'name':dn_no},'posting_date')%}
+      <td>Delivery Note Date<br><b>{{frappe.utils.formatdate(dn_date,"dd-mm-yyyy") or ""}}</b></td>
+    </tr>
+    <tr>
+      <td>Despatched through<br><b>{{doc.transporter or ''}}</b></td>
+      <td>Destination<br><b>{{city}}</b></td>
+    </tr>
+    <tr>
+      <td>Amendment Order No<br><b>{{ ''}}</b></td>
+      <td>Motor Vehicle No:<br><b>{{doc.vehicle_no or ''}}</b></td>
+    </tr>
+    <tr><td colspan="3" rowspan="1"><b>Buyer (if other than consignee): {{doc.customer or ""}}</b><br>{{address_line1}}<br>{{address_line2}}{{city}}{{pincode}}<br>Tel # {{phone}}<br>{{drug_licence_no or ''}}<br>Email : {{email or ''}}<br>GSTIN/UIN : {{gstin}}<br>PAN/IT No. : {{pan}}<br>State Name : {{state}} Code : {{gst_state_no}}<br>Place Of Supply: {{ doc.place_of_supply or ""}}</td>
+    <td colspan="2">Terms of Delivery :{{ doc.terms or "" }}</td>
+    </tr>
+  </tbody></table>
+        <table border="2px">
+        	<tr>
+        		<th class="tac">Sr No.</th>
+        		<th class="tac">No & Kind Of Pkgs</th>
+        		<th class="tac">Description of Goods</th>
+        		<th class="tac">RI No.</th>
+        		<th class="tac">HSN Code</th>
+        		<th class="tac">GST Rate</th>
+        		<th class="tac">Quantity</th>
+        		<th class="tac">Rate</th>
+        		<th class="tac">Per</th>
+        		<th class="tac">Amount.</th>
+        	</tr>
+    		{% for row in doc.items %}
+			<tr>
+				<td class="tac" width="5%">{{ row.idx or '' }}</td>
+				<td class="tac" width="5%">{{ '' }}</td>
+				<td width="35%">{{ row.item_name or '' }}</td>
+				<td class="tac" width="10%">{{ row.item_code.replace('*', '') or ''}}</td>
+				<!-- <td class="tac" width="10%">{{ hsn_code  or '' }}</td> -->
+				{% if row.item_code %}
+					{% set item_record = frappe.get_doc("Item", row.item_code) -%}
+				<td class="tac" width="10%">{{ item_record.gst_hsn_code  or '' }}</td>
+				{% endif %}
+				<td class="tac" width="15%">{{ doc.taxes_and_charges or ''}}</td>
+				<td class="tac" width="10%">{{ row.qty or ''}}</td>
+				<td class="tac" width="10%">{{ row.rate or ''}}</td>
+				<td class="tac" width="10%">{{ row.uom or ''}}</td>
+				<td class="tac" width="10%">{{ row.amount or ''}}</td>
+			</tr>
+			{% endfor %}
+			<tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="1" align="center" class="brs"><b>{{ doc.total_qty }}</b></td>
+    			<td colspan="1" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="trs" align="right"><b>{{ doc.total }}</b></td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="1" align="center" class="brs"><b></b></td>
+    			<td colspan="1" class="brs"><b> GST Amount </b></td>
+    			<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="trs" align="right"><b>{{ doc.total_taxes_and_charges }}</b></td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="brs"><b> &nbsp; </b></td>
+    			<td colspan="1" align="center" class="brs"><b></b></td>
+    			<td colspan="1" class="brs"><b> Total</b></td>
+    			<td colspan="1" class="brs"><b> &nbsp; </b></td>
+        		<td colspan="1" class="trs" align="right"><b>{{ doc.grand_total }}</b></td>
+        	</tr>
+        </table>
+				<table class="table table-bordered">
+							<tr>
+							  <td>Amount Chargeable (in words)<br><b>{{doc.in_words}}</b></td>
+							</tr>
+							</table>
+
+
+							<table class="table table-bordered">
+							<tr>
+							  <td><b>{{doc.other_charges_calculation}}</b></td>
+							</tr>
+							<tr>
+							  <td>Tax Amount (in words) :<b>{{ frappe.utils.money_in_words(doc.total_taxes_and_charges)}}</b></td>
+							  
+							</tr>
+							<tr>
+							  {% set company= frappe.get_doc("Company", {"name":doc.company}) %}
+							  {% if company.default_bank_account %}
+							  {% set bank= frappe.get_doc("Bank Account", {"account":company.default_bank_account}) %}
+							  {% endif %}
+							</tr>
+
+							</table>
+							<table class="table table-bordered">
+								<tr><td colspan="2"><b>Company's PAN:{{ '' }}</b>
+              <td></tr>
+							  <tr>
+							  <td colspan="2"><u>Declaration</u><br>
+							We declare that this invoice shows the actual price of the goods<br>
+							described and that all particulars are true and correct.<br>
+							TAX IS PAYABLE ON REVERSE CHARGE: NO</td>
+							<td>
+							  <div class="panel panel-default">
+							          {%set fiscal_year = frappe.db.get_value("Global Defaults",{"default_company":doc.company},"current_fiscal_year",as_dict = True)%}
+							          <div class="panel-body" style="text-align: left;"><b>For {{doc.company }}</b><br><br><br>
+							            <p style="text-align: right;">Authorised Signatory</p>
+							      </div>
+							        </div>
+							</td>
+							</tr>
+							</table>
+							</div>
+				        <br><br>
+        <div class="row">
+			
+	</body>
+</html>
+
+<tr>
+					
