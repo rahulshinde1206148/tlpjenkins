@@ -2,7 +2,7 @@
 
 def remote = [:]
 remote.name = "dell"
-remote.host = " 192.168.0.100 "
+remote.host = " 192.168.0.100/24 "
 remote.port = 22
 remote.allowAnyHosts = true
 remote.user = 'dell'
