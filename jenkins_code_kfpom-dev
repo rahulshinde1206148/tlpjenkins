@@ -1,7 +1,7 @@
 //Designed by Ajay Salunkhe for auto deployment after Pull Request merge on Github 
 
 def remote = [:]
-remote.name = "dell-Latitude-3460"
+remote.name = "dell"
 remote.host = " 192.168.0.100 "
 remote.port = 22
 remote.allowAnyHosts = true
