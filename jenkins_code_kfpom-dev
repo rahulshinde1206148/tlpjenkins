@@ -5,7 +5,7 @@ remote.name = "dell-Latitude-3460"
 remote.host = " 192.168.0.100 "
 remote.port = 22
 remote.allowAnyHosts = true
-remote.user = "dell"
+remote.user = 'dell'
 remote.password = "dell1234"
 
 //identityFile Path Change According to Location on Server for privatekey
